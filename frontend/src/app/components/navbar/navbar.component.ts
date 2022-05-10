@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedIn = this.authService.isLoggedIn;
+    this.authService.isLoggedIn.subscribe(res => console.log('nav',res))
   }
 
   openLoginModal(){

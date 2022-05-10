@@ -74,6 +74,7 @@ export class AuthService {
         }
         //console.log(auth);
         this._authInfo.next(auth);
+        console.log('service',isLoggedIn);
         this._isLoggedIn.next(isLoggedIn);
         this._loggedInUser.next(isLoggedIn ? appUser : null);
       });

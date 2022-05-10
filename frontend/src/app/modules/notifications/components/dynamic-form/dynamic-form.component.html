@@ -1,4 +1,4 @@
-<form (submit)="submitForm()" #modalForm="ngForm" class="form-container">
+<form (submit)="submitForm()" class="form-container">
     <h4 *ngIf="data?.formTitle">{{data?.formTitle}}</h4>
     <ng-container *ngFor="let field of data?.fields; let i = index">
         <ng-container *ngIf="field.type === type.dropdown">
@@ -48,7 +48,7 @@
         <button mat-raised-button type="button" (click)="cancelForm()">
             Cancel
         </button>
-        <button type="submit" mat-raised-button [disabled]="!modalForm.form.valid">
+        <button type="submit" mat-raised-button>
             Submit
         </button>
     </div>

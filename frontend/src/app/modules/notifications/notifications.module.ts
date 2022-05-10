@@ -5,6 +5,9 @@ import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.com
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -16,7 +19,10 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    FormsModule,
+    MatSnackBarModule,
+    MatDialogModule
   ]
 })
 export class NotificationsModule { }

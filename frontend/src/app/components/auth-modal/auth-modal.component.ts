@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-auth-modal',
@@ -6,10 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./auth-modal.component.css']
 })
 export class AuthModalComponent implements OnInit {
+  isCreating:boolean = false;
 
-  constructor() { }
+  constructor(
+    public dialogRef: MatDialogRef<AuthModalComponent>
+  ) { }
 
   ngOnInit(): void {
   }
 
+  createAccountClicked(){
+    this.isCreating = true;
+  }
+
+  loginClicked(){
+    this.isCreating = false;
+  }
 }

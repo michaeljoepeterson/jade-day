@@ -12,13 +12,28 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAuth } from '@angular/fire/auth';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth } from 'firebase/auth';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AuthModalComponent } from './components/auth-modal/auth-modal.component';
+import { CreateAccountComponent } from './components/create-account/create-account.component';
+import { LoginComponent } from './components/login/login.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing.modules';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NotFoundComponent,
+    AuthModalComponent,
+    CreateAccountComponent,
+    LoginComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     provideFirebaseApp(() => initializeApp(environment.fbConfig)),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage()),

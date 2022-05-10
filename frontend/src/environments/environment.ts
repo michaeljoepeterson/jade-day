@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  fbConfig:{
+    apiKey: "test",
+    authDomain: "test",
+    projectId: "test",
+    storageBucket: "test",
+    messagingSenderId: "test",
+    appId: "test",
+    measurementId: "test"
+  }
 };
 
 /*

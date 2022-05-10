@@ -23,4 +23,9 @@ export class AuthModalComponent implements OnInit {
   loginClicked(){
     this.isCreating = false;
   }
+
+  closeModal(){
+    this.dialogRef.close();
+    //todo route to protected page
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NotificationsService } from '../../modules/notifications/services/notifications.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  @Output() loggedIn: EventEmitter<any> = new EventEmitter();
+
   email?: string;
   password?: string;
 
@@ -26,6 +28,7 @@ export class LoginComponent implements OnInit {
     try{
       let auth = await this.authService.signInEmail(this.email,this.password);
       let token = await auth.user.getIdToken();
+      this.loggedIn.emit();
       //this.checkAppUser(auth.user.email,token);
     }
     catch(e: any){
@@ -41,6 +44,7 @@ export class LoginComponent implements OnInit {
     try{
       let auth:any = await this.authService.googleSignIn();
       let token = await auth.user.getIdToken();
+      this.loggedIn.emit();
       //this.checkAppUser(auth.user.email,token);
     }
     catch(e: any){

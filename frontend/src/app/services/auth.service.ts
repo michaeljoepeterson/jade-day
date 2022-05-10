@@ -7,7 +7,6 @@ import { AuthInfo } from '../models/auth/authInfo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NotificationsService } from '../modules/notifications/services/notifications.service';
 import { AuthModalComponent } from '../components/auth-modal/auth-modal.component';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from '../models/auth/user';
 
 @Injectable({
@@ -91,13 +90,11 @@ export class AuthService {
    * @param pass 
    */
    signInEmail(email: string,pass:string){
-    //return this.afAuth.signInWithEmailAndPassword(email,pass);
     return signInWithEmailAndPassword(this.afAuth,email,pass);
   }
 
   googleSignIn():Promise<any>{
     try{
-      //return this.afAuth.signInWithPopup(this.googleAuthProvider);
       return signInWithPopup(this.afAuth,this.googleAuthProvider);
     }
     catch(e){
@@ -110,7 +107,6 @@ export class AuthService {
   }
 
   createUserEmail(email:string,pass:string):Promise<any>{
-    //return this.afAuth.createUserWithEmailAndPassword(email,pass)
     return createUserWithEmailAndPassword(this.afAuth,email,pass);
   }
 

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { NotificationsService } from '../../modules/notifications/services/notifications.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-create-account',
@@ -8,6 +9,8 @@ import { NotificationsService } from '../../modules/notifications/services/notif
   styleUrls: ['./create-account.component.css']
 })
 export class CreateAccountComponent implements OnInit {
+  @Output() accountCreated: EventEmitter<any> = new EventEmitter();
+
   email?: string|null;
   password?: string|null;
   confirmPass?: string|null;
@@ -64,7 +67,11 @@ export class CreateAccountComponent implements OnInit {
     try{
       let auth = await this.authService.createUserEmail(this.email,this.password);
       let token = await auth.user.getIdToken();
-      this.authService.checkAppUser(this.email,token).subscribe(resp => resp);
+      this.authService.checkAppUser(this.email,token).pipe(
+        tap((response) => {
+          this.accountCreated.emit(response);
+        })
+      ).subscribe(resp => resp);
     }
     catch(e){
       const message = "Error creating account";

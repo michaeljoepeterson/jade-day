@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-create-memory-page',
@@ -12,4 +12,7 @@ export class CreateMemoryPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  handleDayClicked(date: Date){
+    console.log('date', date);
+  }
 }

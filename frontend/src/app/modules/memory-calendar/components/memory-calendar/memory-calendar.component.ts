@@ -27,7 +27,6 @@ export class MemoryCalendarComponent implements OnInit, OnChanges {
   ngOnChanges(simpleChanges: SimpleChanges){
     if(simpleChanges?.['memories']?.currentValue){
       this.memoryEvents = this.memoryService.memoryEventsToCalendarEvents(this.memories);
-      console.log(this.memoryEvents);
     }
   }
 

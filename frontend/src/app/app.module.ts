@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/compat/auth';
 import { USE_EMULATOR as USE_STORAGE_EMULATOR } from '@angular/fire/compat/storage';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
@@ -23,6 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,11 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     }),
     BrowserAnimationsModule,
     MatInputModule,
-    NotificationsModule
+    NotificationsModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    })
   ],
   providers: [
     //{ provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined },

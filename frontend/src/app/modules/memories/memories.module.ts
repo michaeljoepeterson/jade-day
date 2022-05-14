@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MemoriesRoutingModule } from './memories-routing.module';
 import { CreateMemoryPageComponent } from './pages/create-memory-page/create-memory-page.component';
+import { MemoryCalendarModule } from '../memory-calendar/memory-calendar.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { CreateMemoryPageComponent } from './pages/create-memory-page/create-mem
   ],
   imports: [
     CommonModule,
-    MemoriesRoutingModule
+    MemoriesRoutingModule,
+    MemoryCalendarModule
   ]
 })
 export class MemoriesModule { }

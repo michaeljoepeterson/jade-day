@@ -1,3 +1,29 @@
-<form>
-    <p>{{memory | json}}</p>
+<form class="memory-form">
+    <div class="form-controls">
+        <button
+        type="button"
+        mat-icon-button
+        (click)="toggleEditing()">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+    <mat-form-field>
+        <mat-label>Memory</mat-label>
+        <input 
+        matInput 
+        [(ngModel)]="newMemory.summary"
+        name="summary"
+        [disabled]="!isEditing"/>
+    </mat-form-field>
+    <ckeditor
+    name="description"
+    [editor]="Editor" 
+    [(ngModel)]="newMemory.description"
+    [disabled]="!isEditing"></ckeditor>
+    <ng-container *ngIf="isEditing || !memory?.image">
+        <app-image-upload></app-image-upload>
+    </ng-container>
+    <ng-container *ngIf="memory?.image">
+        <app-memory-image></app-memory-image>
+    </ng-container>
 </form>

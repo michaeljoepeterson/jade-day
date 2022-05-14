@@ -28,11 +28,12 @@ export class CreateMemoryPageComponent implements OnInit {
   handleDayClicked(event: IMemoryClickedEvent){
     console.log('date', event);
     const {memory} = event;
-    if(memory){
-      this.dialog.open(MemoryFormModalComponent, {
-        data: memory
-      });
-    }
+    this.dialog.open(MemoryFormModalComponent, {
+      width:'80vw',
+      height:'80vh',
+      data: memory,
+      autoFocus: false
+    });
   }
 
   getMemories(){

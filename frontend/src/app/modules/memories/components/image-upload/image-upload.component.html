@@ -1,0 +1,40 @@
+<div class="upload-container">
+    <ng-container *ngIf="!image">
+        <div
+        [ngClass]="{
+            'drop-file':true, 
+            'clickable':true,
+            'dragged-over':isDraggedOver
+        }"
+        (dragover)="handleDragOver($event)"
+        (mouseleave)="handleDragOut()"
+        (dragleave)="handleDragOut()"
+        (drop)="handleImageDropped($event)"
+        (click)="uploadInput.click()">
+            <div class="drop-description">
+                <span>
+                    Drag and drop a file or click here to select a image
+                </span>
+            </div>
+        </div>
+        <div class="input-group mb-3 upload">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Upload Image</span>
+            </div>
+            <div class="custom-file">
+                <input 
+                #uploadInput
+                (change)="handleImageSelected($event.target.files)" 
+                type="file" 
+                class="custom-file-input">
+                <label 
+                class="custom-file-label">
+                    No File Selected
+                </label>
+            </div>
+        </div>
+    </ng-container>
+    <ng-containg *ngIf="image">
+        <app-memory-image [image]="image"></app-memory-image>
+    </ng-containg>
+</div>

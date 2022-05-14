@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { IMemoryClickedEvent } from '../../../../models/memories/memeoryClickedEvent';
 import { Memory } from '../../../../models/memories/memory';
 import { MemoryService } from '../../services/memory.service';
 
@@ -21,8 +22,8 @@ export class CreateMemoryPageComponent implements OnInit {
     this.getMemories();
   }
 
-  handleDayClicked(date: Date){
-    console.log('date', date);
+  handleDayClicked(event: IMemoryClickedEvent){
+    console.log('date', event);
   }
 
   getMemories(){

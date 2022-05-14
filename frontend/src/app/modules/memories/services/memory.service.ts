@@ -54,4 +54,15 @@ export class MemoryService {
       tap(memories => this._memories.next(memories))
     );
   }
+
+  
+  buildMemoryLookup(memories: Memory[]): Map<string, Memory>{
+    let memoryLookup = new Map();
+
+    for(let memory of memories){
+      memoryLookup.set(memory.date.toDateString(), memory);
+    }
+
+    return memoryLookup;
+  }
 }

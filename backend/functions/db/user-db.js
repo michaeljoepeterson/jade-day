@@ -35,7 +35,7 @@ class UserDb extends BaseDb{
             let query = collection.where("email", "==", email);
             let results = await query.get();
             if(results.docs.length > 0){
-                return results.docs[0].data();
+                return this.docDataToModel(results.docs[0]);
             }
 
             return null;

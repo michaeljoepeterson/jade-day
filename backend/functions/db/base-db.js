@@ -25,7 +25,7 @@ class BaseDb{
                 return newDoc;
             }
             let docData = await newDoc.get();
-            return docData.data();
+            return this.docDataToModel(docData);
         }
         catch(e){
             console.error(e);
@@ -45,6 +45,18 @@ class BaseDb{
             console.error(e);
             throw e;
         }
+    }
+
+    /**
+     * convert doc data to standard raw model data
+     * @param {*} docData 
+     * @returns 
+     */
+    docDataToModel(docData){
+        return {
+            ...docData.data(), 
+            id: docData.id
+        };
     }
 }
 

@@ -25,6 +25,7 @@
         dataKeys.forEach((key: any) => {
             keyLookup[key] = key;
         });
+
         keys.forEach((key: any) => {
             if(data[key] || data[key] === 0 || typeof data[key] === "boolean"){
                 this[key as keyof BaseModel] = data[key];

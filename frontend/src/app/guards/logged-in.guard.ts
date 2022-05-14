@@ -23,7 +23,6 @@ export class LoggedInGuard implements CanActivate {
     return this.authService.isLoggedIn.pipe(
       filter(res => res !== null),
       map(response => {
-        console.log(response);
         return response ? true : false;
       })
     );

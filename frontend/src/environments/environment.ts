@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  url: 'http://localhost:5001/jade-day/us-central1/app/api/',
   fbConfig:{
     apiKey: "test",
     authDomain: "test",

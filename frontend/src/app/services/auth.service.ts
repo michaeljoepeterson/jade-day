@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { GoogleAuthProvider,getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { Auth,connectAuthEmulator,signInWithPopup } from '@angular/fire/auth';
-import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { AuthInfo } from '../models/auth/authInfo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NotificationsService } from '../modules/notifications/services/notifications.service';
 import { AuthModalComponent } from '../components/auth-modal/auth-modal.component';
 import { User } from '../models/auth/user';
+import { ServerResponse } from 'http';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,7 @@ export class AuthService {
           }
         })
       ).subscribe(response => {
+        console.log(response);
         let auth = this._authInfo.value;
         auth.token = authInfo?.token;
         auth.email = authInfo?.email;
@@ -81,8 +83,19 @@ export class AuthService {
     });
   }
 
-  checkAppUser(email: string, token: string): Observable<any>{
-    return of(true);
+  checkAppUser(email: string, token: string): Observable<User>{
+    const url = `${environment.url}users/check`;
+    const body = {
+      user:{
+        email
+      }
+    };
+    return this.http.post(url, body).pipe(
+      map((response: any) => {
+        let {user} = response;
+        return new User(user);
+      })
+    );
   }
 
   /**

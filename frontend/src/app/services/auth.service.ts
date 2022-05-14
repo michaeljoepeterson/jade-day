@@ -8,7 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NotificationsService } from '../modules/notifications/services/notifications.service';
 import { AuthModalComponent } from '../components/auth-modal/auth-modal.component';
 import { User } from '../models/auth/user';
-import { ServerResponse } from 'http';
+import { ApiResponse } from '../models/serverResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -65,10 +65,10 @@ export class AuthService {
           }
         })
       ).subscribe(response => {
-        console.log(response);
         let auth = this._authInfo.value;
         auth.token = authInfo?.token;
         auth.email = authInfo?.email;
+        auth.user = response ? response : null;
         let appUser: User|null = auth?.user ? auth.user : null;
         let isLoggedIn = false;
         if(authInfo?.token && authInfo?.email){
@@ -91,7 +91,7 @@ export class AuthService {
       }
     };
     return this.http.post(url, body).pipe(
-      map((response: any) => {
+      map((response: ApiResponse) => {
         let {user} = response;
         return new User(user);
       })

@@ -6,6 +6,7 @@ import { CreateMemoryPageComponent } from './pages/create-memory-page/create-mem
 import { MemoryCalendarModule } from '../memory-calendar/memory-calendar.module';
 import { MemoryFormComponent } from './components/memory-form/memory-form.component';
 import { MemoryFormModalComponent } from './components/memory-form-modal/memory-form-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MemoryFormModalComponent } from './components/memory-form-modal/memory-
   imports: [
     CommonModule,
     MemoriesRoutingModule,
-    MemoryCalendarModule
+    MemoryCalendarModule,
+    MatDialogModule
   ]
 })
 export class MemoriesModule { }

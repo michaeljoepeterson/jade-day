@@ -1,3 +1,4 @@
-<p>create-memory-page works!</p>
+<h4>Select a Memory</h4>
 <app-memory-calendar
-(dayClicked)="handleDayClicked($event)"></app-memory-calendar>
+(dayClicked)="handleDayClicked($event)"
+[memories]="memories$ | async"></app-memory-calendar>

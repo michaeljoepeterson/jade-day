@@ -4,8 +4,7 @@ class User extends BaseModel{
     constructor(data){
         super();
         this.email = null;
-        this.isJW = false;
-        this.isMP = false;
+        this.role = null;
         this.canView = false;
         this.tokens = 0;
 

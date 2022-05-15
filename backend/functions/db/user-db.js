@@ -53,7 +53,7 @@ class UserDb extends BaseDb{
      */
     async createUser(user){
         try{
-            let doc = await this.saveDoc({...user});
+            let doc = await this.saveDoc(user);
             return doc;
         }
         catch(e){

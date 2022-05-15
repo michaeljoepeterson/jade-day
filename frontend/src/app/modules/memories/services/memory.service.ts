@@ -96,8 +96,10 @@ export class MemoryService {
         memories.push(memory);
         console.log(memories);
         this._memories.next(memories);
-        this.notificationService.displaySnackBar(`Memory created on ${memory.date.toLocaleDateString()}!`);
         return memory;
+      }),
+      tap(memory => {
+        this.notificationService.displaySnackBar(`Memory created on ${memory.date.toLocaleDateString()}!`);
       }),
       catchError(err => {
         console.warn(err);

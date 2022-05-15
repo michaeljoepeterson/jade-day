@@ -1,4 +1,6 @@
-<form class="memory-form">
+<form 
+class="memory-form"
+(submit)="saveMemory()">
     <div class="form-controls">
         <button
         type="button"
@@ -29,4 +31,9 @@
     <ng-container *ngIf="memory?.image">
         <app-memory-image (removeImage)="removeImage()"></app-memory-image>
     </ng-container>
+    <button
+    mat-raised-button
+    type="submit">
+        Submit
+    </button>
 </form>

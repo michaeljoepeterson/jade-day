@@ -60,4 +60,8 @@ export class MemoryFormComponent implements OnInit {
     this.ref.markForCheck();
     console.log('remove image');
   }
+
+  saveMemory(){
+    console.log(this.newMemory);
+  }
 }

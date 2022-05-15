@@ -1,3 +1,4 @@
+import { User } from "../auth/user";
 import { BaseModel } from "../base-model";
 
 /**
@@ -8,6 +9,7 @@ export class Memory extends BaseModel{
     summary: string = null;
     description: string = null;
     image: string = null;
+    creator: User = null;
     
     constructor(data: any){
         super();

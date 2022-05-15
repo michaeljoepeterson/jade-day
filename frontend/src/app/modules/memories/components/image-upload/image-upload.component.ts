@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-image-upload',
@@ -7,6 +7,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ImageUploadComponent implements OnInit {
   @Input() image: string = null;
+
+  @Output() imageAdded: EventEmitter<FormData> = new EventEmitter();
+  @Output() removeImage: EventEmitter<any> = new EventEmitter();
 
   isDraggedOver: boolean = false;
 
@@ -20,6 +23,7 @@ export class ImageUploadComponent implements OnInit {
       const file = files[0];
       const url = URL.createObjectURL(file)
       this.image = url;
+      this.handleImageAdded(file);
     }
   }
 
@@ -31,6 +35,7 @@ export class ImageUploadComponent implements OnInit {
         const file = event.dataTransfer.items[0].getAsFile();
         const url = URL.createObjectURL(file)
         this.image = url;
+        this.handleImageAdded(file);
       }
       catch(e){
         console.warn(e);
@@ -45,5 +50,21 @@ export class ImageUploadComponent implements OnInit {
 
   handleDragOut(){
     this.isDraggedOver = false;
+  }
+
+  handleRemoveImage(){
+    this.image = null;
+    this.removeImage.emit();
+  }
+
+  handleImageAdded(file: File){
+    const formData = this.buildFormData(file);
+    this.imageAdded.emit(formData);
+  }
+
+  buildFormData(file: File): FormData{
+    const formData = new FormData();
+    formData.append('file',file, file.name);
+    return formData;
   }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-memory-image',
@@ -6,18 +6,37 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, O
   templateUrl: './memory-image.component.html',
   styleUrls: ['./memory-image.component.css']
 })
-export class MemoryImageComponent implements OnInit, AfterViewInit {
+export class MemoryImageComponent implements OnInit, OnChanges, AfterViewChecked {
   @ViewChild('image') imageElement: ElementRef;
 
   @Input() image: string;
+  @Output() removeImage: EventEmitter<any> = new EventEmitter();
+
+  shouldUpdateImage: boolean = false;
 
   constructor() { }
 
-  ngOnInit(): void {
-    console.log(this.image);
+  ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes?.['image']?.currentValue){
+      this.shouldUpdateImage = true;
+    }
   }
   
-  ngAfterViewInit(){
+  ngAfterViewChecked() {
+      if(this.shouldUpdateImage){
+        this.updateImage()
+      }
+  }
+
+  updateImage(){
     this.imageElement.nativeElement.src = this.image;
+    this.shouldUpdateImage = false;
+  }
+
+  handleRemoveClicked(){
+    this.removeImage.emit();
   }
 }

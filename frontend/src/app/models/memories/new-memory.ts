@@ -6,4 +6,5 @@ export interface INewMemory{
     summary: string;
     description: string;
     image: any;
+    creator: string;
 }

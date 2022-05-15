@@ -35,6 +35,8 @@
         </div>
     </ng-container>
     <ng-containg *ngIf="image">
-        <app-memory-image [image]="image"></app-memory-image>
+        <app-memory-image 
+        [image]="image"
+        (removeImage)="handleRemoveImage()"></app-memory-image>
     </ng-containg>
 </div>

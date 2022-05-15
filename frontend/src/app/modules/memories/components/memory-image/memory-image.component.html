@@ -1,3 +1,11 @@
-<div>
+<div class="image-container">
+    <div>
+        <button
+        mat-button
+        matTooltip="Remove Image"
+        (click)="handleRemoveClicked()">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
     <img #image/>
 </div>

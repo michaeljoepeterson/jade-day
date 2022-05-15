@@ -21,9 +21,12 @@
     [(ngModel)]="newMemory.description"
     [disabled]="!isEditing"></ckeditor>
     <ng-container *ngIf="isEditing || !memory?.image">
-        <app-image-upload></app-image-upload>
+        <app-image-upload 
+        [image]="memory?.image"
+        (imageAdded)="imageAdded($event)"
+        (removeImage)="removeImage()"></app-image-upload>
     </ng-container>
     <ng-container *ngIf="memory?.image">
-        <app-memory-image></app-memory-image>
+        <app-memory-image (removeImage)="removeImage()"></app-memory-image>
     </ng-container>
 </form>

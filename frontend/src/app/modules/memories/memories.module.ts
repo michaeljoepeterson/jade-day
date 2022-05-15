@@ -14,6 +14,8 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
 import { MatButtonModule } from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { MemoryImageComponent } from './components/memory-image/memory-image.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { MemoryImageComponent } from './components/memory-image/memory-image.com
     ReactiveFormsModule,
     CKEditorModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ]
 })
 export class MemoriesModule { }

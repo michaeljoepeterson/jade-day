@@ -66,14 +66,6 @@ export class MemoryFormComponent implements OnInit {
   }
 
   saveMemory(){
-    this.memoryService.createMemory(this.newMemory).pipe(
-      //add image to newly created memory
-      switchMap(memory => {
-        if(this.imageFile){
-          return this.memoryService.updateImage(this.imageFile, memory.id);
-        }
-        return of(null);
-      }),
-    ).subscribe(res => this.memoryCreated.emit());
+    this.memoryService.createMemory(this.newMemory, this.imageFile).subscribe(res => this.memoryCreated.emit());
   }
 }

@@ -29,7 +29,9 @@ class="memory-form"
         (removeImage)="removeImage()"></app-image-upload>
     </ng-container>
     <ng-container *ngIf="memory?.image">
-        <app-memory-image (removeImage)="removeImage()"></app-memory-image>
+        <app-memory-image 
+        [image]="memory?.image"
+        (removeImage)="removeImage()"></app-memory-image>
     </ng-container>
     <button
     mat-raised-button

@@ -47,7 +47,7 @@ export class ImageService {
     }
     catch(e){
       console.warn(e);
-      throw e;
+      return null;
     }
   }
 }

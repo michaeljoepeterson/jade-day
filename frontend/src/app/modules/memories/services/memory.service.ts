@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { BehaviorSubject, catchError, from, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { INewMemory } from '../../../models/memories/new-memory';
 import { Memory } from '../../../models/memories/memory';
 import { AuthService } from '../../../services/auth.service';
@@ -50,18 +50,6 @@ export class MemoryService {
   }
 
   getMemories(): Observable<Memory[]>{
-    const mockMemories: Memory[] = [];
-
-    for(let i = 0;i < 5;i++){
-      let memoryData = {
-        summary: `Memory ${i}`,
-        description: `Description ${i}`,
-        date: this.randomDay(),
-        id: i
-      };
-
-      mockMemories.push(new Memory(memoryData));
-    }
     const user = this.authService.getUser();
     const url = `${environment.url}${this._endpoint}/${user.email}`;
 
@@ -69,15 +57,27 @@ export class MemoryService {
     const options = {
       headers
     };
-
+    let foundMemories: Memory[] = [];
     return this.http.get(url,options).pipe(
       map((res: ApiResponse)=> {
         const {memories} = res;
-        let foundMemories = memories.map((memory: any) => new Memory(memory));
+        foundMemories = memories.map((memory: any) => new Memory(memory));
+        return foundMemories;
+      }),
+      switchMap((memories: Memory[]) => {
+        let requests = memories.map(memory => from(this.imageService.getImage(memory.id)));
+        return forkJoin(requests);
+      }),
+      map(urls => {
+        foundMemories.map((memory, i) => {
+          if(urls[i]){
+            memory.image = urls[i];
+          }
+        });
         this._memories.next(foundMemories);
         return foundMemories;
       })
-    )
+    );
   }
 
   
@@ -91,7 +91,7 @@ export class MemoryService {
     return memoryLookup;
   }
 
-  createMemory(memory: INewMemory): Observable<Memory>{
+  createMemory(memory: INewMemory, imageFile: File): Observable<Memory>{
     const url = `${environment.url}${this._endpoint}`;
 
     const headers = this.authService.getAuthHeaders();
@@ -102,16 +102,28 @@ export class MemoryService {
     const body = {
       memory
     };
-
+    let newMemory: Memory;
     return this.http.post(url, body, options).pipe(
       map((res: ApiResponse) => {
-        const memory = new Memory(res['memory']);
-        const memories = this._memories.value;
-        memories.push(memory);
-        console.log(memories);
-        this._memories.next(memories);
-        return memory;
+        newMemory = new Memory(res['memory']);
+        return newMemory;
       }),
+      switchMap(memory => {
+        if(imageFile){
+          return this.updateImage(imageFile, memory.id);
+        }
+        return of(null);
+      }),
+      switchMap(memory => {
+        return from(this.imageService.getImage(newMemory.id));
+      }),
+      map(url => {
+        newMemory.image = url;
+        const memories = this._memories.value;
+        memories.push(newMemory);
+        this._memories.next(memories);
+        return newMemory;
+      }), 
       tap(memory => {
         this.notificationService.displaySnackBar(`Memory created on ${memory.date.toLocaleDateString()}!`);
       }),

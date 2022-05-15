@@ -24,6 +24,7 @@ export class CreateMemoryPageComponent implements OnInit {
   ngOnInit(): void {
     this.memoryService.memories$.subscribe(res => {
       this.memories = [...res];
+      console.log(this.memories);
       this.ref.markForCheck();
     });
     this.getMemories();

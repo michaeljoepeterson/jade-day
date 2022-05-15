@@ -3,6 +3,7 @@ const { memoryDb } = require('../db/memory-db');
 const { Memory } = require('../models/memory');
 const { checkAuth } = require('../middleware/checkAuth');
 const { checkRole } = require('../middleware/checkRole');
+const { imageStorage } = require('../storage/storage');
 const router = express.Router();
 
 router.use(checkAuth);
@@ -22,5 +23,22 @@ router.post('/', checkRole(0), async (req, res, next) => {
         next();
     }
 });
+
+router.put('/:id', checkRole(0), async (req, res, next) => {
+    const {memory} = req.body;
+    const {id} = req.params;
+    try{
+        const memoryDoc = await memoryDb.updateDocById(memory, id);
+        return res.json({
+            message: 'Memory Updated',
+            memory: new Memory(memoryDoc)
+        });
+    }
+    catch(e){
+        res.err = e;
+        next();
+    }
+});
+
 
 module.exports = {router};

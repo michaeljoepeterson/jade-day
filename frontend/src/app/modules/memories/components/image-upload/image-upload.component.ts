@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 export class ImageUploadComponent implements OnInit {
   @Input() image: string = null;
 
-  @Output() imageAdded: EventEmitter<FormData> = new EventEmitter();
+  @Output() imageAdded: EventEmitter<File> = new EventEmitter();
   @Output() removeImage: EventEmitter<any> = new EventEmitter();
 
   isDraggedOver: boolean = false;
@@ -58,13 +58,6 @@ export class ImageUploadComponent implements OnInit {
   }
 
   handleImageAdded(file: File){
-    const formData = this.buildFormData(file);
-    this.imageAdded.emit(formData);
-  }
-
-  buildFormData(file: File): FormData{
-    const formData = new FormData();
-    formData.append('file',file, file.name);
-    return formData;
+    this.imageAdded.emit(file);
   }
 }

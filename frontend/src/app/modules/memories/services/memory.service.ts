@@ -108,4 +108,20 @@ export class MemoryService {
       })
     );
   }
+
+  updateImage(formData: FormData, id: string): Observable<Memory>{
+    const url = `${environment.url}${this._endpoint}/image/${id}`;
+
+    const headers = this.authService.getAuthHeaders();
+    const options = {
+      headers
+    };
+    
+    return this.http.put(url, formData, options).pipe(
+      map((response: ApiResponse) => {
+
+        return new Memory();
+      })
+    )
+  }
 }

@@ -16,14 +16,29 @@ class BaseDb{
      * @param {boolean} useRawDoc
      * @returns the raw doc or the doc data depending on use raw doc bool
      */
-    async saveDoc(doc, useRawDoc){
+    async saveDoc(doc){
         try{
             let data = {...doc};
             let newDoc = await this.db.collection(this.collectionName).add(data);
+            let docData = await newDoc.get();
+            return this.docDataToModel(docData);
+        }
+        catch(e){
+            console.error(e);
+            throw e;
+        }
+    }
 
-            if(useRawDoc){
-                return newDoc;
-            }
+    /**
+     * update a single doc by id
+     * @param {*} doc 
+     * @param {*} id 
+     * @returns 
+     */
+    async updateDocById(doc, id){
+        try{
+            let data = {...doc};
+            let newDoc = await this.db.collection(this.collectionName).doc(id).update(data);
             let docData = await newDoc.get();
             return this.docDataToModel(docData);
         }

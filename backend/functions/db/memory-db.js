@@ -8,7 +8,18 @@ class MemoryDb extends BaseDb{
 
     async createMemory(memory){
         try{
-            let doc = await this.saveDoc({...memory});
+            let doc = await this.saveDoc(memory);
+            return doc;
+        }
+        catch(e){
+            console.error(e);
+            throw e;
+        }
+    }
+
+    async updateMemory(memory, id){
+        try{
+            let doc = await this.updateDocById(memory, id);
             return doc;
         }
         catch(e){

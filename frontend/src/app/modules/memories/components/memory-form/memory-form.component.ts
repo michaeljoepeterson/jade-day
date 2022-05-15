@@ -4,6 +4,8 @@ import { Memory } from '../../../../models/memories/memory';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { INewMemory } from 'src/app/models/memories/new-memory';
 import { MemoryService } from '../../services/memory.service';
+import { of, switchMap } from 'rxjs';
+import { ImageService } from '../../../../services/image.service';
 
 @Component({
   selector: 'app-memory-form',
@@ -19,11 +21,12 @@ export class MemoryFormComponent implements OnInit {
   Editor = ClassicEditor;
   isEditing: boolean = false;
   newMemory: INewMemory;
-  formData: FormData;
+  imageFile: File;
 
   constructor(
     private ref: ChangeDetectorRef,
-    private memoryService: MemoryService
+    private memoryService: MemoryService,
+    private imageService: ImageService
   ) { }
 
   ngOnInit(): void {
@@ -48,9 +51,8 @@ export class MemoryFormComponent implements OnInit {
    * capture form data for sending to service to upload image
    * @param formData
    */
-  imageAdded(formData: FormData){
-    console.log(formData.getAll('file'));
-    this.formData = formData;
+  imageAdded(file: File){
+    this.imageFile = file;
   }
 
   removeImage(){
@@ -60,12 +62,19 @@ export class MemoryFormComponent implements OnInit {
 
     this.memory.image = null;
     this.newMemory.image = null;
-    this.formData = null;
+    this.imageFile = null;
     this.ref.markForCheck();
-    console.log('remove image');
   }
 
   saveMemory(){
-    this.memoryService.createMemory(this.newMemory).subscribe(res => this.memoryCreated.emit());
+    this.memoryService.createMemory(this.newMemory).pipe(
+      //add image to newly created memory
+      switchMap(memory => {
+        if(this.imageFile){
+          return this.imageService.uploadImage(this.imageFile);
+        }
+        return of(null);
+      })
+    ).subscribe(res => this.memoryCreated.emit());
   }
 }

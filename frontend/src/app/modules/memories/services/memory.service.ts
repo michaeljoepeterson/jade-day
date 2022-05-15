@@ -103,6 +103,7 @@ export class MemoryService {
       }),
       catchError(err => {
         console.warn(err);
+        this.notificationService.displayErrorSnackBar('Error creating memory', err);
         throw err;
       })
     );

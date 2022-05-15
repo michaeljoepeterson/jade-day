@@ -2,11 +2,12 @@ const express = require('express');
 const { memoryDb } = require('../db/memory-db');
 const { Memory } = require('../models/memory');
 const { checkAuth } = require('../middleware/checkAuth');
+const { checkRole } = require('../middleware/checkRole');
 const router = express.Router();
 
 router.use(checkAuth);
 
-router.post('/', async (req, res, next) => {
+router.post('/', checkRole(0), async (req, res, next) => {
     const {memory} = req.body;
     memory.creator = req.user.email;
     try{

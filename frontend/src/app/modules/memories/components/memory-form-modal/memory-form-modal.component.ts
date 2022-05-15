@@ -18,4 +18,7 @@ export class MemoryFormModalComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  closeModal(){
+    this.dialogRef.close();
+  }
 }

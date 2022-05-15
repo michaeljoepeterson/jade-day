@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Memory } from '../../../../models/memories/memory';
 //@ts-ignore
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { INewMemory } from 'src/app/models/memories/new-memory';
+import { MemoryService } from '../../services/memory.service';
 
 @Component({
   selector: 'app-memory-form',
@@ -13,17 +14,20 @@ import { INewMemory } from 'src/app/models/memories/new-memory';
 export class MemoryFormComponent implements OnInit {
   @Input() memory: Memory;
 
+  @Output() memoryCreated: EventEmitter<any> = new EventEmitter();
+
   Editor = ClassicEditor;
   isEditing: boolean = false;
   newMemory: INewMemory;
   formData: FormData;
 
   constructor(
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private memoryService: MemoryService
   ) { }
 
   ngOnInit(): void {
-    this.isEditing = this.memory ? false : true;
+    this.isEditing = this.memory?.id ? false : true;
     this.buildNewMemory();
   }
 
@@ -62,6 +66,6 @@ export class MemoryFormComponent implements OnInit {
   }
 
   saveMemory(){
-    console.log(this.newMemory);
+    this.memoryService.createMemory(this.newMemory).subscribe(res => this.memoryCreated.emit());
   }
 }

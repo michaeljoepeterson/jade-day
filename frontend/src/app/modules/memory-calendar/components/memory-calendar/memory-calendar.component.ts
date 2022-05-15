@@ -6,7 +6,6 @@ import { IMemoryClickedEvent } from '../../../../models/memories/memeoryClickedE
 
 @Component({
   selector: 'app-memory-calendar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './memory-calendar.component.html',
   styleUrls: ['./memory-calendar.component.css']
 })

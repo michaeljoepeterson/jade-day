@@ -11,7 +11,7 @@ export class Memory extends BaseModel{
     image: string = null;
     creator: User = null;
     
-    constructor(data: any){
+    constructor(data?: any){
         super();
         if(data){
             this.initMemory(data);

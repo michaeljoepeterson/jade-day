@@ -1,3 +1,5 @@
 <div class="form-modal">
-    <app-memory-form [memory]="memory"></app-memory-form>
+    <app-memory-form 
+    [memory]="memory"
+    (memoryCreated)="closeModal()"></app-memory-form>
 </div>

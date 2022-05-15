@@ -127,4 +127,16 @@ export class AuthService {
   logout():Promise<any>{
     return this.afAuth.signOut();
   }
+
+  getToken():string{
+    return this._authInfo.value.token ? this._authInfo.value.token : null;
+  }
+
+  getAuthHeaders():HttpHeaders{
+    let headers = new HttpHeaders();
+    let token = this.getToken();
+    //headers = headers.append('authtoken',token);
+    headers = headers.append('Authorization',`Bearer ${token}`);
+    return headers;
+  }
 }

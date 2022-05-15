@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { IMemoryClickedEvent } from '../../../../models/memories/memeoryClickedEvent';
@@ -13,21 +13,29 @@ import { MemoryService } from '../../services/memory.service';
   styleUrls: ['./create-memory-page.component.css']
 })
 export class CreateMemoryPageComponent implements OnInit {
-  memories$: Observable<Memory[]>;
+  memories: Memory[] = [];
 
   constructor(
     private memoryService: MemoryService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private ref: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.memories$ = this.memoryService.memories$;
+    this.memoryService.memories$.subscribe(res => {
+      this.memories = [...res];
+      this.ref.markForCheck();
+    });
     this.getMemories();
   }
 
   handleDayClicked(event: IMemoryClickedEvent){
     console.log('date', event);
-    const {memory} = event;
+    let {memory, date} = event;
+    if(!memory){
+      memory = new Memory();
+      memory.date = date;
+    }
     this.dialog.open(MemoryFormModalComponent, {
       width:'80vw',
       height:'80vh',

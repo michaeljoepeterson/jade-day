@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
+import { INewMemory } from '../../../models/memories/new-memory';
 import { Memory } from '../../../models/memories/memory';
+import { AuthService } from '../../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { ApiResponse } from '../../../models/serverResponse';
+import { NotificationsService } from '../../notifications/services/notifications.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +15,13 @@ import { Memory } from '../../../models/memories/memory';
 export class MemoryService {
   private _memories: BehaviorSubject<Memory[]> = new BehaviorSubject([]);
   memories$: Observable<Memory[]> = this._memories.asObservable();
+  private _endpoint: string = 'memory';
 
-  constructor() { }
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private notificationService: NotificationsService
+  ) { }
 
   memoryEventsToCalendarEvents(memories: Memory[]): CalendarEvent[]{
     const memoryEvents: CalendarEvent[] = [];
@@ -64,5 +75,34 @@ export class MemoryService {
     }
 
     return memoryLookup;
+  }
+
+  createMemory(memory: INewMemory): Observable<Memory>{
+    const url = `${environment.url}${this._endpoint}`;
+
+    const headers = this.authService.getAuthHeaders();
+    const options = {
+      headers
+    };
+
+    const body = {
+      memory
+    };
+
+    return this.http.post(url, body, options).pipe(
+      map((res: ApiResponse) => {
+        const memory = new Memory(res['memory']);
+        const memories = this._memories.value;
+        memories.push(memory);
+        console.log(memories);
+        this._memories.next(memories);
+        this.notificationService.displaySnackBar(`Memory created on ${memory.date.toLocaleDateString()}!`);
+        return memory;
+      }),
+      catchError(err => {
+        console.warn(err);
+        throw err;
+      })
+    );
   }
 }

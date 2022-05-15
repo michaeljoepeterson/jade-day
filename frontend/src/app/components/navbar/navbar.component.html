@@ -12,13 +12,13 @@
         </ul>
         <ng-container *ngIf="(loggedIn | async) !== null">
           <ng-container *ngIf="(loggedIn | async); else login">
-            <button 
-            class="btn btn-outline-success"
+            <button
+            class="btn btn-outline-secondary" 
             (click)="logout()">Logout</button>
           </ng-container>
           <ng-template #login>
-            <button 
-              class="btn btn-outline-success"
+            <button
+            class="btn btn-outline-secondary" 
               (click)="openLoginModal()">Login</button>
           </ng-template>
         </ng-container>

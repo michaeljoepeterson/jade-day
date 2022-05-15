@@ -3,7 +3,6 @@ const { memoryDb } = require('../db/memory-db');
 const { Memory } = require('../models/memory');
 const { checkAuth } = require('../middleware/checkAuth');
 const { checkRole } = require('../middleware/checkRole');
-const { imageStorage } = require('../storage/storage');
 const router = express.Router();
 
 router.use(checkAuth);
@@ -40,5 +39,19 @@ router.put('/:id', checkRole(0), async (req, res, next) => {
     }
 });
 
+router.get('/:email', async (req, res, next) => {
+    try{
+        const {email} = req.params;
+        const memories = await memoryDb.getMemories(email);
+        return res.json({
+            message: 'Memories found',
+            memories
+        });
+    }
+    catch(e){
+        res.err = e;
+        next();
+    }
+});
 
 module.exports = {router};

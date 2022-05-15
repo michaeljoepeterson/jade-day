@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, from, map, Observable, of, tap } from 'rxjs';
 import { INewMemory } from '../../../models/memories/new-memory';
 import { Memory } from '../../../models/memories/memory';
 import { AuthService } from '../../../services/auth.service';
@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../models/serverResponse';
 import { NotificationsService } from '../../notifications/services/notifications.service';
+import { ImageService } from '../../../services/image.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class MemoryService {
   constructor(
     private authService: AuthService,
     private http: HttpClient,
+    private imageService: ImageService,
     private notificationService: NotificationsService
   ) { }
 
@@ -60,10 +62,22 @@ export class MemoryService {
 
       mockMemories.push(new Memory(memoryData));
     }
+    const user = this.authService.getUser();
+    const url = `${environment.url}${this._endpoint}/${user.email}`;
 
-    return of(mockMemories).pipe(
-      tap(memories => this._memories.next(memories))
-    );
+    const headers = this.authService.getAuthHeaders();
+    const options = {
+      headers
+    };
+
+    return this.http.get(url,options).pipe(
+      map((res: ApiResponse)=> {
+        const {memories} = res;
+        let foundMemories = memories.map((memory: any) => new Memory(memory));
+        this._memories.next(foundMemories);
+        return foundMemories;
+      })
+    )
   }
 
   
@@ -109,19 +123,11 @@ export class MemoryService {
     );
   }
 
-  updateImage(formData: FormData, id: string): Observable<Memory>{
-    const url = `${environment.url}${this._endpoint}/image/${id}`;
-
-    const headers = this.authService.getAuthHeaders();
-    const options = {
-      headers
-    };
-    
-    return this.http.put(url, formData, options).pipe(
-      map((response: ApiResponse) => {
-
+  updateImage(file: File, id: string): Observable<Memory>{
+    return from(this.imageService.uploadImage(file, id)).pipe(
+      map((response) => {
         return new Memory();
       })
-    )
+    );
   }
 }

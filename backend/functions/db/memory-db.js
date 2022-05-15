@@ -27,6 +27,19 @@ class MemoryDb extends BaseDb{
             throw e;
         }
     }
+
+    async getMemories(email){
+        try{
+            const collection = this.getCollectionRef();
+            const query = collection.where("creator", "==", email);
+            const results = await query.get();
+            const memories = results.docs.map(doc => this.docDataToModel(doc));
+            return memories;
+        }
+        catch(e){
+            throw e;
+        }
+    }
 }
 
 let memoryDb = new MemoryDb('memory');

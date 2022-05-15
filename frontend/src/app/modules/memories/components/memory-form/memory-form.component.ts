@@ -25,8 +25,7 @@ export class MemoryFormComponent implements OnInit {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private memoryService: MemoryService,
-    private imageService: ImageService
+    private memoryService: MemoryService
   ) { }
 
   ngOnInit(): void {
@@ -71,7 +70,7 @@ export class MemoryFormComponent implements OnInit {
       //add image to newly created memory
       switchMap(memory => {
         if(this.imageFile){
-          return this.imageService.uploadImage(this.imageFile, memory.id);
+          return this.memoryService.updateImage(this.imageFile, memory.id);
         }
         return of(null);
       }),

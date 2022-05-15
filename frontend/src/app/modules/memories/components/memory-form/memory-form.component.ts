@@ -4,7 +4,7 @@ import { Memory } from '../../../../models/memories/memory';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { INewMemory } from 'src/app/models/memories/new-memory';
 import { MemoryService } from '../../services/memory.service';
-import { of, switchMap } from 'rxjs';
+import { of, switchMap, tap } from 'rxjs';
 import { ImageService } from '../../../../services/image.service';
 
 @Component({
@@ -71,10 +71,10 @@ export class MemoryFormComponent implements OnInit {
       //add image to newly created memory
       switchMap(memory => {
         if(this.imageFile){
-          return this.imageService.uploadImage(this.imageFile);
+          return this.imageService.uploadImage(this.imageFile, memory.id);
         }
         return of(null);
-      })
+      }),
     ).subscribe(res => this.memoryCreated.emit());
   }
 }

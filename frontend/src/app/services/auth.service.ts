@@ -139,4 +139,8 @@ export class AuthService {
     headers = headers.append('Authorization',`Bearer ${token}`);
     return headers;
   }
+
+  getUser(): User{
+    return this._authInfo.value.user ? this._authInfo.value.user : null;
+  }
 }

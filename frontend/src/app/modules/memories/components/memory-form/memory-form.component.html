@@ -36,7 +36,8 @@ class="memory-form"
     <button
     mat-raised-button
     type="submit"
-    color="primary">
+    color="primary"
+    [disabled]="isLoading">
         Save
     </button>
 </form>

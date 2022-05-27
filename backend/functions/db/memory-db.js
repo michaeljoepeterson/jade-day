@@ -8,6 +8,10 @@ class MemoryDb extends BaseDb{
 
     async createMemory(memory){
         try{
+            const foundMemory = await this.checkMemory(memory.creator, memory.date);
+            if(foundMemory.length > 0){
+                return foundMemory[0];
+            }
             let doc = await this.saveDoc(memory);
             return doc;
         }
@@ -28,10 +32,19 @@ class MemoryDb extends BaseDb{
         }
     }
 
+    async checkMemory(email, date){
+        const collection = this.getCollectionRef();
+        const query = collection.where('creator', '==', email).where('date', '==', date);
+        const results = await query.get();
+        const memories = results.docs.map(doc => this.docDataToModel(doc));
+
+        return memories;
+    }
+
     async getMemories(email){
         try{
             const collection = this.getCollectionRef();
-            const query = collection.where("creator", "==", email);
+            const query = collection.where('creator', '==', email);
             const results = await query.get();
             const memories = results.docs.map(doc => this.docDataToModel(doc));
             return memories;

@@ -22,6 +22,7 @@ export class MemoryFormComponent implements OnInit {
   isEditing: boolean = false;
   newMemory: INewMemory;
   imageFile: File;
+  isLoading: boolean = false;
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -39,7 +40,7 @@ export class MemoryFormComponent implements OnInit {
       description: this.memory?.description,
       date: this.memory?.date,
       image: null,
-      creator: 'test'
+      creator: null
     };
   }
 
@@ -66,6 +67,12 @@ export class MemoryFormComponent implements OnInit {
   }
 
   saveMemory(){
-    this.memoryService.createMemory(this.newMemory, this.imageFile).subscribe(res => this.memoryCreated.emit());
+    if(this.isLoading){
+      return;
+    }
+    this.isLoading = true;
+    this.memoryService.createMemory(this.newMemory, this.imageFile).pipe(
+      tap(res => this.isLoading = false)
+    ).subscribe(res => this.memoryCreated.emit());
   }
 }

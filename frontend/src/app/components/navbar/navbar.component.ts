@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RouteLink } from '../../models/route-link';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -8,6 +9,17 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  navLinks: RouteLink[] = [
+    {
+      url: '/home',
+      name: 'Home'
+    },
+    {
+      url: '/memory',
+      name: 'Memories',
+      isLoggedIn: true
+    }
+  ];
   loggedIn?: Observable<any>;
 
   constructor(
@@ -16,7 +28,6 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedIn = this.authService.isLoggedIn;
-    this.authService.isLoggedIn.subscribe(res => console.log('nav',res))
   }
 
   openLoginModal(){

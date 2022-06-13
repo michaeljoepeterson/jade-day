@@ -42,4 +42,4 @@ testem.log
 Thumbs.db
 node_modules/
 environment.prod.ts
-.firebase
+/.firebase

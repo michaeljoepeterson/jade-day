@@ -26,7 +26,7 @@ export class CreateMemoryPageComponent implements OnInit {
     this.store.dispatch(getMemories());
     this.store.select(selectMemories).subscribe(res => {
       this.memories = [...res];
-      console.log(this.memories);
+      console.log('new memories',this.memories);
       this.ref.markForCheck();
     });
   }

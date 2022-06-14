@@ -2,10 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Memory } from '../../../../models/memories/memory';
 //@ts-ignore
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { INewMemory } from 'src/app/models/memories/new-memory';
+import { INewMemory } from '../../../../models/memories/new-memory';
 import { MemoryService } from '../../services/memory.service';
-import { of, switchMap, tap } from 'rxjs';
-import { ImageService } from '../../../../services/image.service';
+import { Store } from '@ngrx/store';
+import { createMemory } from '../../../../store/memories/actions';
+import { selectMemoriesLoading } from 'src/app/store/memories/selectors';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-memory-form',
@@ -23,15 +25,28 @@ export class MemoryFormComponent implements OnInit {
   newMemory: INewMemory;
   imageFile: File;
   isLoading: boolean = false;
+  onDestroy: Subject<any> = new Subject();
 
   constructor(
     private ref: ChangeDetectorRef,
+    private store: Store,
     private memoryService: MemoryService
   ) { }
 
   ngOnInit(): void {
+    this.store.select(selectMemoriesLoading).pipe(
+      takeUntil(this.onDestroy)
+    ).subscribe(loading => this.isLoading = loading);
+    this.memoryService.memoryCreated$.pipe(
+      takeUntil(this.onDestroy)
+    ).subscribe(res => this.memoryCreated.emit());
     this.isEditing = this.memory?.id ? false : true;
     this.buildNewMemory();
+  }
+
+  ngOnDestroy(){
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 
   buildNewMemory(){
@@ -71,8 +86,14 @@ export class MemoryFormComponent implements OnInit {
       return;
     }
     this.isLoading = true;
+    this.store.dispatch(createMemory({
+      memory: this.newMemory,
+      imageFile: this.imageFile
+    }));
+    /*
     this.memoryService.createMemory(this.newMemory, this.imageFile).pipe(
       tap(res => this.isLoading = false)
     ).subscribe(res => this.memoryCreated.emit());
+    */
   }
 }

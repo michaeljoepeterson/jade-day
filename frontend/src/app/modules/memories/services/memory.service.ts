@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { INewMemory } from '../../../models/memories/new-memory';
 import { Memory } from '../../../models/memories/memory';
 import { AuthService } from '../../../services/auth.service';
@@ -15,6 +15,8 @@ import { ImageService } from '../../../services/image.service';
 })
 export class MemoryService {
   private _endpoint: string = 'memory';
+  private _memoryCreated: Subject<any> = new Subject();
+  memoryCreated$: Observable<any> = this._memoryCreated.asObservable();
 
   constructor(
     private authService: AuthService,
@@ -110,6 +112,7 @@ export class MemoryService {
         return newMemory;
       }), 
       tap(memory => {
+        this._memoryCreated.next(memory);
         this.notificationService.displaySnackBar(`Memory created on ${memory.date.toLocaleDateString()}!`);
       }),
       catchError(err => {

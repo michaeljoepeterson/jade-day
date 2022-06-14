@@ -1,12 +1,6 @@
-//remove memories observable from memory service
-//add get memories action
-//add effect for get memories action, runs memory service get mem, then sends get memories success action
-//reducer responds to get success action and updates current memories 
-//similar pattern for adding memories
-
 import { createReducer, on } from "@ngrx/store";
 import { IMemoryState } from "../../models/memories/memory-state";
-import { getMemories, getMemoriesError, getMemoriesSuccess } from "./actions";
+import { createMemory, createMemorySuccess, getMemories, getMemoriesError, getMemoriesSuccess } from "./actions";
 
 const initialState: IMemoryState = {
     memories: [],
@@ -34,5 +28,17 @@ export const MemoryReducer = createReducer(
         error: error,
         loading: false,
         memories: []
-    }))
+    })),
+
+    on(createMemory, (state) => ({
+        ...state,
+        loading: true
+    })),
+
+    on(createMemorySuccess, (state, {memory}) => ({
+        ...state,
+        error: null,
+        loading: false,
+        memories: [...state.memories, memory]
+    })),
 );

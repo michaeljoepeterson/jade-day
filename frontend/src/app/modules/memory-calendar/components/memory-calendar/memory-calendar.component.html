@@ -10,7 +10,7 @@
                 <mat-label>Choose a date</mat-label>
                 <input [(ngModel)]="selectedDate" matInput [matDatepicker]="picker">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+                <mat-datepicker [dateClass]="highlightDates.bind(this)" #picker></mat-datepicker>
             </mat-form-field>
         </div>
     </div>

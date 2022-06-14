@@ -42,4 +42,11 @@ export class MemoryCalendarComponent implements OnInit, OnChanges {
     });
   }
 
+  highlightDates(date: Date, view: any):string{
+    if(this.memoryLookup.has(date.toDateString())){
+      console.log(date, this.memoryLookup);
+      return 'has-memory';
+    }
+    return '';
+  }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { catchError, forkJoin, from, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { INewMemory } from '../../../models/memories/new-memory';
 import { Memory } from '../../../models/memories/memory';
 import { AuthService } from '../../../services/auth.service';

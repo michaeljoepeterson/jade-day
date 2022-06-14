@@ -25,6 +25,7 @@ import { StoreModule } from '@ngrx/store';
 import { MemoryReducer } from './store/memories/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { MemoryEffects } from './store/memories/effects';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { MemoryEffects } from './store/memories/effects';
     StoreModule.forRoot({
       memoryState: MemoryReducer
     }),
-    EffectsModule.forRoot([MemoryEffects])
+    EffectsModule.forRoot([MemoryEffects]),
+    MatNativeDateModule
   ],
   bootstrap: [AppComponent]
 })

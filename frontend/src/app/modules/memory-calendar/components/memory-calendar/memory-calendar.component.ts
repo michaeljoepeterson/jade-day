@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChange
 import { CalendarEvent } from 'angular-calendar';
 import { MemoryService } from '../../../../modules/memories/services/memory.service';
 import { Memory } from '../../../../models/memories/memory';
-import { IMemoryClickedEvent } from '../../../../models/memories/memeoryClickedEvent';
+import { IMemoryClickedEvent } from '../../../../models/memories/memory-clicked-event';
 
 @Component({
   selector: 'app-memory-calendar',

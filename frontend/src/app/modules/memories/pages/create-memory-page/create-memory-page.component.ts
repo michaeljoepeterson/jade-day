@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { IMemoryClickedEvent } from '../../../../models/memories/memeoryClickedEvent';
+import { IMemoryClickedEvent } from '../../../../models/memories/memory-clicked-event';
 import { Memory } from '../../../../models/memories/memory';
 import { MemoryFormModalComponent } from '../../components/memory-form-modal/memory-form-modal.component';
-import { MemoryService } from '../../services/memory.service';
+import { Store } from '@ngrx/store';
+import { getMemories } from '../../../../store/memories/actions';
+import { selectMemories } from '../../../../store/memories/selectors';
 
 @Component({
   selector: 'app-create-memory-page',
@@ -16,18 +17,18 @@ export class CreateMemoryPageComponent implements OnInit {
   memories: Memory[] = [];
 
   constructor(
-    private memoryService: MemoryService,
     private dialog: MatDialog,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private store: Store
   ) { }
 
   ngOnInit(): void {
-    this.memoryService.memories$.subscribe(res => {
+    this.store.dispatch(getMemories());
+    this.store.select(selectMemories).subscribe(res => {
       this.memories = [...res];
       console.log(this.memories);
       this.ref.markForCheck();
     });
-    this.getMemories();
   }
 
   handleDayClicked(event: IMemoryClickedEvent){
@@ -43,9 +44,5 @@ export class CreateMemoryPageComponent implements OnInit {
       data: memory,
       autoFocus: false
     });
-  }
-
-  getMemories(){
-    this.memoryService.getMemories().subscribe(res => res);
   }
 }

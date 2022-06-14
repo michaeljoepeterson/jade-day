@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { USE_EMULATOR as USE_STORAGE_EMULATOR } from '@angular/fire/compat/storage';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
 import { environment } from '../environments/environment';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -24,6 +21,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { StoreModule } from '@ngrx/store';
+import { MemoryReducer } from './store/memories/reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { MemoryEffects } from './store/memories/effects';
 
 @NgModule({
   declarations: [
@@ -53,13 +54,11 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
-    })
-  ],
-  providers: [
-    //{ provide: USE_AUTH_EMULATOR, useValue: !environment.production ? ['localhost', 9099] : undefined },
-    { provide: USE_FIRESTORE_EMULATOR, useValue: !environment.production ? ['localhost', 8080] : undefined },
-    { provide: USE_FUNCTIONS_EMULATOR, useValue: !environment.production ? ['localhost', 5001] : undefined },
-    { provide: USE_STORAGE_EMULATOR, useValue: !environment.production ? ['localhost', 9199] : undefined }
+    }),
+    StoreModule.forRoot({
+      memoryState: MemoryReducer
+    }),
+    EffectsModule.forRoot([MemoryEffects])
   ],
   bootstrap: [AppComponent]
 })

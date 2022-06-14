@@ -14,8 +14,6 @@ import { ImageService } from '../../../services/image.service';
   providedIn: 'root'
 })
 export class MemoryService {
-  private _memories: BehaviorSubject<Memory[]> = new BehaviorSubject([]);
-  memories$: Observable<Memory[]> = this._memories.asObservable();
   private _endpoint: string = 'memory';
 
   constructor(
@@ -39,16 +37,7 @@ export class MemoryService {
     return memoryEvents;
   }
 
-  //todo remove
-  randomDay(): Date{
-    const max = 11;
-    const min = 0;
-    const days = Math.floor(Math.random() * (max - min + 1)) + min;
-    const date = new Date();
-    date.setDate(date.getDate() + days);
-    return date;
-  }
-
+  //todo not return all memories
   getMemories(): Observable<Memory[]>{
     const user = this.authService.getUser();
     const url = `${environment.url}${this._endpoint}/${user.email}`;
@@ -74,7 +63,6 @@ export class MemoryService {
             memory.image = urls[i];
           }
         });
-        this._memories.next(foundMemories);
         return foundMemories;
       })
     );
@@ -119,9 +107,6 @@ export class MemoryService {
       }),
       map(url => {
         newMemory.image = url;
-        const memories = this._memories.value;
-        memories.push(newMemory);
-        this._memories.next(memories);
         return newMemory;
       }), 
       tap(memory => {

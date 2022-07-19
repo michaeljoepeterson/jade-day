@@ -1,18 +1,40 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, Button, Dialog } from '@mui/material'
 import { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import { AuthModal } from './auth/auth-modal';
+import { createUserWithEmail } from '../auth/auth';
 
 /**
  * simple mobile responsive placeholder navbar mainly for demo purposes
  * @returns
  */
 export const Navbar = () => {
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+    
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    const setModal = (open: boolean) => {
+        setModalOpen(open);
+    }
+
+    const loginWithEmail = (email: string, pass: string) => {
+        console.log('login', email, pass);
+    }
+
+    const createUser = async (email: string, pass: string) => {
+        console.log('create', email, pass);
+        try{
+            await createUserWithEmail(email, pass)
+        }
+        catch(e){
+            console.warn(e);
+        }
+    }
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -52,12 +74,19 @@ export const Navbar = () => {
                 component="div"
                 sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
             >
-                Job Reviews
+                Jade Day
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Link className="nav-link-button" to={'/'}>
+                <Link 
+                className="nav-link-button" to={'/'}>
                     Home
                 </Link>
+                <Button 
+                variant="contained" 
+                color="secondary"
+                onClick={(e) => setModal(true)}>
+                    Login
+                </Button>
             </Box>
             </Toolbar>
             <Box component="nav">
@@ -77,6 +106,11 @@ export const Navbar = () => {
                 {drawer}
                 </Drawer>
              </Box>
+             <Dialog
+             open={modalOpen}
+             onClose={(e) => setModal(false)}>
+                <AuthModal createUser={createUser} login={loginWithEmail}/>
+             </Dialog>
         </AppBar>
     )
 }

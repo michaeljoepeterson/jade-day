@@ -1,4 +1,4 @@
-import { fbConfig } from "../config";
+import { apiUrl, fbConfig } from "../config";
 import { initializeApp } from "firebase/app";
 import {
     GoogleAuthProvider,
@@ -10,24 +10,62 @@ import {
     signOut,
     connectAuthEmulator
 } from "firebase/auth";
+import axios from "axios";
+import { IUser } from "../models/user";
+import { Dispatch } from "@reduxjs/toolkit";
+import { loadingAuth, setUserData, setUserError } from "./state/auth-slice";
 
 const app = initializeApp(fbConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 let listener: any = null;
-
-export const listenForAuth = () => {
+//using this method let this pipeline handle the auth flow
+//could change to have a function check auth that checks the auth.currentUser and is only called on app init
+export const listenForAuth = (dispatch: Dispatch) => {
     if(process.env.NODE_ENV !== 'production'){
         connectAuthEmulator(auth, "http://localhost:9099");
     }
     if(listener){
         listener();
     }
-    listener = auth.onAuthStateChanged((user) => console.log('user', user));
+    listener = auth.onAuthStateChanged(async (user) => {
+        try{
+            dispatch(loadingAuth({
+                loading: true
+            }));
+            console.log('user', user);
+            if(!user){
+                dispatch(loadingAuth({
+                    loading: false
+                }));
+                return;
+            }
+            const authToken = await user?.getIdToken();
+            //get the app user
+            const appUser = await checkAppUser(user.email as string);
+            console.log('found app user', user);
+            dispatch(setUserData({
+                user: {
+                    email: user.email
+                },
+                authToken
+            }));
+        }
+        catch(e){
+            console.warn('error checking user', e);
+            dispatch(setUserError(e));
+            throw e;
+        }
+    });
 }
 
-export const loginWithEmail = (email: string, pass: string) => {
-
+export const loginWithEmail = async (email: string, pass: string) => {
+    try{
+        await signInWithEmailAndPassword(auth, email, pass);
+    }
+    catch(e){
+        throw e;
+    }
 }
 
 export const createUserWithEmail = async (email: string, pass: string) => {
@@ -44,10 +82,32 @@ export const loginWithGoogle = () => {
 
 }
 
-export const logout = () => {
-    signOut(auth);
+export const logout = async () => {
+    try{
+        await signOut(auth);
+    }
+    catch(e){
+        throw e;
+    }
 }
 
-const checkAppUser = (email: string) => {
-
+/**
+ * get/create the app user
+ * @param email
+ * @returns
+ */
+export const checkAppUser = async (email: string) => {
+    try{
+        const url = `${apiUrl}users/check`;
+        const res = await axios.post(url, {
+            user:{
+                email
+            }
+        });
+        console.log(res);
+        return res.data?.user;
+    }
+    catch(e){
+        throw e;
+    }
 }

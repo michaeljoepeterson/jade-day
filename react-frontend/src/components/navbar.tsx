@@ -3,17 +3,22 @@ import { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { AuthModal } from './auth/auth-modal';
-import { createUserWithEmail } from '../auth/auth';
+import { useSelector } from 'react-redux';
+import { createUserWithEmailAction, logoutAction, selectAuthLoading, selectIsLoggedIn } from '../auth/state/auth-slice';
+import { useAppDispatch } from '../store';
+import { createUserWithEmail, loginWithEmail } from '../auth/auth';
 
 /**
  * simple mobile responsive placeholder navbar mainly for demo purposes
  * @returns
  */
 export const Navbar = () => {
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const isLoading = useSelector(selectAuthLoading);
+    const dispatch = useAppDispatch();
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
-    
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-
+    console.log(isLoading);
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
@@ -22,14 +27,26 @@ export const Navbar = () => {
         setModalOpen(open);
     }
 
-    const loginWithEmail = (email: string, pass: string) => {
+    const handleLogout = () => {
+        setModal(false);
+        dispatch(logoutAction());
+    }
+
+    const loginEmail = async (email: string, pass: string) => {
         console.log('login', email, pass);
+        try{
+            await loginWithEmail(email, pass);
+        }
+        catch(e){
+            console.warn(e);
+        }
     }
 
     const createUser = async (email: string, pass: string) => {
         console.log('create', email, pass);
         try{
-            await createUserWithEmail(email, pass)
+            //dispatch(createUserWithEmailAction(email, pass));
+            await createUserWithEmail(email, pass);
         }
         catch(e){
             console.warn(e);
@@ -56,7 +73,19 @@ export const Navbar = () => {
     
     const drawerWidth = 240;
     const container = window !== undefined ? () => window.document.body : undefined;
-
+    const loginButton = !isLoggedIn ? 
+    (<Button 
+    variant="contained" 
+    color="secondary"
+    onClick={(e) => setModal(true)}>
+        Login
+    </Button>) : 
+    (<Button 
+    variant="contained" 
+    color="secondary"
+    onClick={(e) => handleLogout()}>
+        Logout
+    </Button>);
     return (
         <AppBar component="nav">
             <Toolbar>
@@ -81,12 +110,7 @@ export const Navbar = () => {
                 className="nav-link-button" to={'/'}>
                     Home
                 </Link>
-                <Button 
-                variant="contained" 
-                color="secondary"
-                onClick={(e) => setModal(true)}>
-                    Login
-                </Button>
+                {isLoading ? null : loginButton}
             </Box>
             </Toolbar>
             <Box component="nav">
@@ -109,7 +133,7 @@ export const Navbar = () => {
              <Dialog
              open={modalOpen}
              onClose={(e) => setModal(false)}>
-                <AuthModal createUser={createUser} login={loginWithEmail}/>
+                <AuthModal createUser={createUser} login={loginEmail}/>
              </Dialog>
         </AppBar>
     )

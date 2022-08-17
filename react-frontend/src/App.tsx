@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import { Navbar } from './components/navbar';
 import { listenForAuth } from './auth/auth';
 import { useAppDispatch } from './store';
+import { AuthProvider } from './auth/auth.context';
 const HomePage = React.lazy(() => import('./pages/home-page'));
 const NotFoundPage = React.lazy(() => import('./pages/not-found'));
 
@@ -15,23 +16,25 @@ function App() {
     listenForAuth(dispatch);
   }, [])
   return (
-    <BrowserRouter>
-      <Navbar/>
-      <div className="page">
-        <Routes>
-            <Route path="/" element={
-              <Suspense fallback={<></>}>
-                <HomePage/>
-              </Suspense>
-            }/>
-            <Route path="*" element={
-              <Suspense fallback={<></>}>
-                <NotFoundPage/>
-              </Suspense>
-            }/>
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar/>
+        <div className="page">
+          <Routes>
+              <Route path="/" element={
+                <Suspense fallback={<></>}>
+                  <HomePage/>
+                </Suspense>
+              }/>
+              <Route path="*" element={
+                <Suspense fallback={<></>}>
+                  <NotFoundPage/>
+                </Suspense>
+              }/>
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

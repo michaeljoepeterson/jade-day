@@ -1,18 +1,20 @@
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, Button, Dialog } from '@mui/material'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { AuthModal } from './auth/auth-modal';
 import { useSelector } from 'react-redux';
-import { createUserWithEmailAction, logoutAction, selectAuthLoading, selectIsLoggedIn } from '../auth/state/auth-slice';
+import { logoutAction, selectAuthLoading, selectIsLoggedIn } from '../auth/state/auth-slice';
 import { useAppDispatch } from '../store';
-import { createUserWithEmail, loginWithEmail } from '../auth/auth';
+import { loginWithEmail } from '../auth/auth';
+import { AuthContext } from '../auth/auth.context';
 
 /**
  * simple mobile responsive placeholder navbar mainly for demo purposes
  * @returns
  */
 export const Navbar = () => {
+    const authContext = useContext(AuthContext);
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const isLoading = useSelector(selectAuthLoading);
     const dispatch = useAppDispatch();
@@ -35,7 +37,7 @@ export const Navbar = () => {
     const loginEmail = async (email: string, pass: string) => {
         console.log('login', email, pass);
         try{
-            await loginWithEmail(email, pass);
+            await authContext.loginWithEmail(email, pass);
         }
         catch(e){
             console.warn(e);
@@ -45,8 +47,7 @@ export const Navbar = () => {
     const createUser = async (email: string, pass: string) => {
         console.log('create', email, pass);
         try{
-            //dispatch(createUserWithEmailAction(email, pass));
-            await createUserWithEmail(email, pass);
+            await authContext.createUserWithEmail(email, pass);
         }
         catch(e){
             console.warn(e);

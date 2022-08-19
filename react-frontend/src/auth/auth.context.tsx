@@ -19,6 +19,7 @@ export interface IAuthContext{
     error?: any;
     loginWithEmail: (email: string, pass: string) => Promise<any>;
     createUserWithEmail: (email: string, pass: string) => Promise<any>;
+    loginWithGoogle: () => Promise<any>;
 }
 
 const defaultContext: IAuthContext = {
@@ -27,10 +28,12 @@ const defaultContext: IAuthContext = {
     loading: false,
     error: null,
     loginWithEmail: async (email: string, pass: string) => null,
-    createUserWithEmail: async (email: string, pass: string) => null
+    createUserWithEmail: async (email: string, pass: string) => null,
+    loginWithGoogle: async () => null
 }
 
 export const AuthContext = createContext<IAuthContext>(defaultContext);
+const googleAuthProvider = new GoogleAuthProvider();
 
 export const AuthProvider = ({
     children
@@ -49,7 +52,6 @@ export const AuthProvider = ({
                 setLoading(false);
                 return;
             }
-
             //const authToken = await user?.getIdToken();
         });
     }, []);
@@ -72,6 +74,15 @@ export const AuthProvider = ({
         }
     }, []);
 
+    const loginWithGoogle = useCallback(async () => {
+        try{
+            return signInWithPopup(auth, googleAuthProvider);
+          }
+          catch(e){
+            throw e;
+          }
+    }, [])
+
     useEffect(() => {
         const listener = listenForAuth();
         return listener();
@@ -85,7 +96,8 @@ export const AuthProvider = ({
             loading,
             error,
             loginWithEmail,
-            createUserWithEmail
+            createUserWithEmail,
+            loginWithGoogle
         }}>
             {children}
         </AuthContext.Provider>

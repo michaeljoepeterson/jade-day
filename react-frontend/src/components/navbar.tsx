@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, Button, Dialog } from '@mui/material'
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { AuthModal } from './auth/auth-modal';
@@ -14,13 +14,13 @@ import { AuthContext } from '../auth/auth.context';
  * @returns
  */
 export const Navbar = () => {
-    const authContext = useContext(AuthContext);
+    const {loginWithEmail, createUserWithEmail, loginWithGoogle} = useContext(AuthContext);
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const isLoading = useSelector(selectAuthLoading);
     const dispatch = useAppDispatch();
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-    console.log(isLoading);
+
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
@@ -34,25 +34,32 @@ export const Navbar = () => {
         dispatch(logoutAction());
     }
 
-    const loginEmail = async (email: string, pass: string) => {
-        console.log('login', email, pass);
+    const loginEmail = useCallback(async (email: string, pass: string) => {
         try{
-            await authContext.loginWithEmail(email, pass);
+            await loginWithEmail(email, pass);
         }
         catch(e){
             console.warn(e);
         }
-    }
+    }, []);
 
-    const createUser = async (email: string, pass: string) => {
-        console.log('create', email, pass);
+    const createUser = useCallback(async (email: string, pass: string) => {
         try{
-            await authContext.createUserWithEmail(email, pass);
+            await createUserWithEmail(email, pass);
         }
         catch(e){
             console.warn(e);
         }
-    }
+    }, [])
+
+    const handleGoogleSignIn = useCallback(async () => {
+        try{
+            await loginWithGoogle();
+        }
+        catch(e){
+            console.warn(e);
+        }
+    }, []);
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -135,7 +142,8 @@ export const Navbar = () => {
             createUser={createUser} 
             login={loginEmail}
             modalOpen={modalOpen}
-            modalClosed={(isOpen: boolean) => setModal(false)}/>
+            modalClosed={(isOpen: boolean) => setModal(false)}
+            googleLogin={handleGoogleSignIn}/>
         </AppBar>
     )
 }

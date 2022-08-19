@@ -13,7 +13,7 @@
 }
 
 .auth-buttons > *{
-    margin: 0.4em 0;
+    margin: 0.4em 0 !important;
 }
 
 .google-image{

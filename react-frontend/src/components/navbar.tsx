@@ -1,10 +1,8 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, Button, Dialog } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, Button } from '@mui/material'
 import { useCallback, useContext, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { AuthModal } from './auth/auth-modal';
-import { useSelector } from 'react-redux';
-import { selectAuthLoading, selectIsLoggedIn } from '../auth/state/auth-slice';
 import { AuthContext } from '../auth/auth.context';
 
 /**
@@ -16,10 +14,12 @@ export const Navbar = () => {
         loginWithEmail, 
         createUserWithEmail, 
         loginWithGoogle,
-        logout
+        logout,
+        authState
     } = useContext(AuthContext);
-    const isLoggedIn = useSelector(selectIsLoggedIn);
-    const isLoading = useSelector(selectAuthLoading);
+    const {user, loading} = authState;
+    const isLoggedIn = authState.user?.email ? true : false;
+    const isLoading = authState.loading;
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -39,6 +39,7 @@ export const Navbar = () => {
     const loginEmail = useCallback(async (email: string, pass: string) => {
         try{
             await loginWithEmail(email, pass);
+            setModal(false);
         }
         catch(e){
             console.warn(e);
@@ -48,6 +49,7 @@ export const Navbar = () => {
     const createUser = useCallback(async (email: string, pass: string) => {
         try{
             await createUserWithEmail(email, pass);
+            setModal(false);
         }
         catch(e){
             console.warn(e);
@@ -57,6 +59,7 @@ export const Navbar = () => {
     const handleGoogleSignIn = useCallback(async () => {
         try{
             await loginWithGoogle();
+            setModal(false);
         }
         catch(e){
             console.warn(e);
@@ -116,10 +119,6 @@ export const Navbar = () => {
                 Jade Day
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Link 
-                className="nav-link-button" to={'/'}>
-                    Home
-                </Link>
                 {isLoading ? null : loginButton}
             </Box>
             </Toolbar>

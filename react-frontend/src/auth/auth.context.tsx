@@ -11,6 +11,15 @@ import {
     connectAuthEmulator
 } from "firebase/auth";
 import { fbApp } from "../firebase/fb";
+import axios from "axios";
+import { apiUrl } from "../config";
+
+export interface IAuthState{
+    user: IUser | null;
+    authToken: string | null;
+    loading: boolean;
+    error: any;
+}
 
 export interface IAuthContext{
     user?: IUser | null;
@@ -21,6 +30,7 @@ export interface IAuthContext{
     createUserWithEmail: (email: string, pass: string) => Promise<any>;
     loginWithGoogle: () => Promise<any>;
     logout: () => Promise<any>;
+    authState: IAuthState;
 }
 
 const defaultContext: IAuthContext = {
@@ -31,7 +41,8 @@ const defaultContext: IAuthContext = {
     loginWithEmail: async (email: string, pass: string) => null,
     createUserWithEmail: async (email: string, pass: string) => null,
     loginWithGoogle: async () => null,
-    logout: async () => null
+    logout: async () => null,
+    authState: {} as IAuthState
 }
 
 export const AuthContext = createContext<IAuthContext>(defaultContext);
@@ -41,20 +52,42 @@ export const AuthProvider = ({
     children
 }: any) => {
     const auth = getAuth(fbApp);
-    const [user, setUser] = useState<IUser | null>(null);
-    const [authToken, setAuthToken] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<any>(null);
+    const [authState, setAuthState] = useState<IAuthState>({
+        user: null,
+        authToken: null,
+        loading: true,
+        error: null
+    });
 
     const listenForAuth = useCallback(() => {
+        if(process.env.NODE_ENV !== 'production'){
+            connectAuthEmulator(auth, "http://localhost:9099");
+        }
         return auth.onAuthStateChanged(async (user) => {
             console.log('context: ',user);
-            setLoading(true);
+            setAuthState({
+                ...authState,
+                loading: true
+            });
             if(!user){
-                setLoading(false);
+                setAuthState({
+                    ...authState,
+                    loading: false,
+                    user: null,
+                    authToken: null,
+                    error: null
+                });
                 return;
             }
-            //const authToken = await user?.getIdToken();
+            const authToken = await user?.getIdToken();
+            const appUser = await checkAppUser(user.email as string);
+            setAuthState({
+                ...authState,
+                loading: false,
+                user: appUser,
+                authToken: authToken,
+                error: null
+            });
         });
     }, []);
 
@@ -92,24 +125,47 @@ export const AuthProvider = ({
         catch(e){
             console.warn(e);
         }
-    }, [])
+    }, []);
+
+    
+    /**
+     * get/create the app user
+     * @param email
+     * @returns
+     */
+    const checkAppUser = async (email: string) => {
+        try{
+            const url = `${apiUrl}users/check`;
+            const res = await axios.post(url, {
+                user:{
+                    email
+                }
+            });
+            console.log(res);
+            return res.data?.user;
+        }
+        catch(e){
+            throw e;
+        }
+    }
 
     useEffect(() => {
         const listener = listenForAuth();
-        return listener();
+        return () => listener();
     }, []);
 
     return (
         <AuthContext.Provider
         value={{
-            user,
-            authToken,
-            loading,
-            error,
+            user: authState.user,
+            authToken: authState.authToken,
+            loading: authState.loading,
+            error: authState.error,
             loginWithEmail,
             createUserWithEmail,
             loginWithGoogle,
-            logout
+            logout,
+            authState
         }}>
             {children}
         </AuthContext.Provider>

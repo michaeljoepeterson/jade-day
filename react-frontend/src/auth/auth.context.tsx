@@ -20,6 +20,7 @@ export interface IAuthContext{
     loginWithEmail: (email: string, pass: string) => Promise<any>;
     createUserWithEmail: (email: string, pass: string) => Promise<any>;
     loginWithGoogle: () => Promise<any>;
+    logout: () => Promise<any>;
 }
 
 const defaultContext: IAuthContext = {
@@ -29,7 +30,8 @@ const defaultContext: IAuthContext = {
     error: null,
     loginWithEmail: async (email: string, pass: string) => null,
     createUserWithEmail: async (email: string, pass: string) => null,
-    loginWithGoogle: async () => null
+    loginWithGoogle: async () => null,
+    logout: async () => null
 }
 
 export const AuthContext = createContext<IAuthContext>(defaultContext);
@@ -81,6 +83,15 @@ export const AuthProvider = ({
           catch(e){
             throw e;
           }
+    }, []);
+
+    const logout = useCallback(async () => {
+        try{
+            await signOut(auth);
+        }
+        catch(e){
+            console.warn(e);
+        }
     }, [])
 
     useEffect(() => {
@@ -97,7 +108,8 @@ export const AuthProvider = ({
             error,
             loginWithEmail,
             createUserWithEmail,
-            loginWithGoogle
+            loginWithGoogle,
+            logout
         }}>
             {children}
         </AuthContext.Provider>

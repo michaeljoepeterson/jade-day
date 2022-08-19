@@ -4,9 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { AuthModal } from './auth/auth-modal';
 import { useSelector } from 'react-redux';
-import { logoutAction, selectAuthLoading, selectIsLoggedIn } from '../auth/state/auth-slice';
-import { useAppDispatch } from '../store';
-import { loginWithEmail } from '../auth/auth';
+import { selectAuthLoading, selectIsLoggedIn } from '../auth/state/auth-slice';
 import { AuthContext } from '../auth/auth.context';
 
 /**
@@ -14,10 +12,14 @@ import { AuthContext } from '../auth/auth.context';
  * @returns
  */
 export const Navbar = () => {
-    const {loginWithEmail, createUserWithEmail, loginWithGoogle} = useContext(AuthContext);
+    const {
+        loginWithEmail, 
+        createUserWithEmail, 
+        loginWithGoogle,
+        logout
+    } = useContext(AuthContext);
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const isLoading = useSelector(selectAuthLoading);
-    const dispatch = useAppDispatch();
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -30,8 +32,8 @@ export const Navbar = () => {
     }
 
     const handleLogout = () => {
+        logout();
         setModal(false);
-        dispatch(logoutAction());
     }
 
     const loginEmail = useCallback(async (email: string, pass: string) => {

@@ -14,18 +14,3 @@
 .nav-link-mobile-button{
   color: black;
 }
-
-.flex-form{
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.flex-form{
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-form > *{
-  margin: 1em !important;
-}

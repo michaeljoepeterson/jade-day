@@ -1,7 +1,10 @@
 import { Button, DialogContent, DialogTitle, Dialog } from "@mui/material"
 import { useState } from "react";
 import { CreateUserModal } from "./create-user-modal";
-import { LoginModal } from "./login-modal"
+import { LoginModal } from "./login-modal";
+import googleIcon from '../../assets/icons/g-icon.png';
+import './styles.css';
+
 type header = 'Login' | 'Create Account';
 
 export const AuthModal = ({
@@ -65,10 +68,31 @@ export const AuthModal = ({
                     confirmPassUpdated={confirmPassUpdated}
                 />
                 }
-                
-                <div>
-                    <Button onClick={(e) => loginWithEmail()}>Login</Button>
-                    <Button onClick={(e) => createNewUser()}>Create Account</Button>
+                <div className="auth-buttons">
+                    <Button 
+                    variant="outlined"
+                    onClick={(e) => loginWithEmail()}
+                    sx={{
+                        width: "100%"
+                    }}>Login</Button>
+                    <Button
+                    variant="outlined" 
+                    onClick={(e) => createNewUser()}
+                    sx={{
+                        width: "100%"
+                    }}>
+                        <img
+                        className="google-image"
+                        src={googleIcon} 
+                        alt="google icon"/>
+                        Google Sign In
+                    </Button>
+                    <Button
+                    variant="outlined" 
+                    onClick={(e) => createNewUser()}
+                    sx={{
+                        width: "100%"
+                    }}>Create Account</Button>
                 </div>
             </DialogContent>
         </Dialog>

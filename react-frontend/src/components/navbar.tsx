@@ -57,7 +57,7 @@ export const Navbar = () => {
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
           <Typography variant="h6" sx={{ my: 2 }}>
-            Job Reviews
+            Jade Day
           </Typography>
           <Divider />
           <List>
@@ -128,14 +128,14 @@ export const Navbar = () => {
                     '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                 }}
                 >
-                {drawer}
+                    {drawer}
                 </Drawer>
              </Box>
-             <Dialog
-             open={modalOpen}
-             onClose={(e) => setModal(false)}>
-                <AuthModal createUser={createUser} login={loginEmail}/>
-             </Dialog>
+            <AuthModal 
+            createUser={createUser} 
+            login={loginEmail}
+            modalOpen={modalOpen}
+            modalClosed={(isOpen: boolean) => setModal(false)}/>
         </AppBar>
     )
 }

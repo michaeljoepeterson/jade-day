@@ -1,4 +1,4 @@
-import { Button, DialogContent, DialogTitle } from "@mui/material"
+import { Button, DialogContent, DialogTitle, Dialog } from "@mui/material"
 import { useState } from "react";
 import { CreateUserModal } from "./create-user-modal";
 import { LoginModal } from "./login-modal"
@@ -6,8 +6,15 @@ type header = 'Login' | 'Create Account';
 
 export const AuthModal = ({
     login,
-    createUser
-}: {login: (email: string, pass: string) => any, createUser: (email: string, pass: string) => any}) => {
+    createUser,
+    modalOpen = false,
+    modalClosed
+}: {
+    login: (email: string, pass: string) => any; 
+    createUser: (email: string, pass: string) => any;
+    modalOpen?: boolean;
+    modalClosed: (isOpen: boolean) => any;
+}) => {
     const [email, setEmail] = useState<string | undefined>();
     const [pass, setPass] = useState<string | undefined>();
     const [confirmPass, setConfirmPass] = useState<string | undefined>();
@@ -35,8 +42,14 @@ export const AuthModal = ({
         }
     }
 
+    const closeModal = () => {
+        modalClosed(false);
+    }
+
     return (
-        <>
+        <Dialog
+        open={modalOpen}
+        onClose={(e) => closeModal()}>
             <DialogTitle id="alert-dialog-title">
                 {modalHeader}
             </DialogTitle>
@@ -58,6 +71,6 @@ export const AuthModal = ({
                     <Button onClick={(e) => createNewUser()}>Create Account</Button>
                 </div>
             </DialogContent>
-        </>
+        </Dialog>
     )
 }

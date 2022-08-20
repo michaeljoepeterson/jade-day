@@ -2,14 +2,14 @@ import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, Li
 import { useCallback, useContext, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
-import { AuthModal } from './auth/auth-modal';
+import AuthModal from './auth/auth-modal';
 import { AuthContext } from '../auth/auth.context';
 
 /**
  * simple mobile responsive placeholder navbar mainly for demo purposes
  * @returns
  */
-export const Navbar = () => {
+const Navbar = () => {
     const {
         loginWithEmail, 
         createUserWithEmail, 
@@ -148,3 +148,5 @@ export const Navbar = () => {
         </AppBar>
     )
 }
+
+export default Navbar;

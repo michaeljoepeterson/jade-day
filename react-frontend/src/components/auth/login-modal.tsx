@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { FormEvent } from "react"
 
-export const LoginModal = ({
+const LoginModal = ({
     emailUpdated,
     passUpdated
 }: {emailUpdated: (email: string) => any, passUpdated: (email: string) => any}) => {
@@ -40,3 +40,5 @@ export const LoginModal = ({
         </div>
     )
 }
+
+export default LoginModal

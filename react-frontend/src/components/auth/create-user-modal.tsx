@@ -1,7 +1,7 @@
 import { Button, TextField } from "@mui/material";
 import { FormEvent, useState } from "react"
 
-export const CreateUserModal = ({
+const CreateUserModal = ({
     emailUpdated,
     passUpdated,
     confirmPassUpdated
@@ -52,3 +52,5 @@ export const CreateUserModal = ({
         </div>
     )
 }
+
+export default CreateUserModal;

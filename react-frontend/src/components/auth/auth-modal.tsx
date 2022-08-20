@@ -1,13 +1,13 @@
 import { Button, DialogContent, DialogTitle, Dialog } from "@mui/material"
 import { useCallback, useState } from "react";
-import { CreateUserModal } from "./create-user-modal";
-import { LoginModal } from "./login-modal";
+import CreateUserModal from "./create-user-modal";
+import LoginModal from "./login-modal";
 import googleIcon from '../../assets/icons/g-icon.png';
 import './styles.css';
 
 type header = 'Login' | 'Create Account';
 
-export const AuthModal = ({
+const AuthModal = ({
     login,
     createUser,
     modalOpen = false,
@@ -109,3 +109,5 @@ export const AuthModal = ({
         </Dialog>
     )
 }
+
+export default AuthModal;

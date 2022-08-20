@@ -1,3 +1,5 @@
+import withLoggedIn from "../HOC/withLoggedIn";
+
 const MemoriesPage = () => {
     return (
         <>
@@ -6,4 +8,4 @@ const MemoriesPage = () => {
     )
 };
 
-export default MemoriesPage;
+export default withLoggedIn(MemoriesPage);

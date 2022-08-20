@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Suspense } from 'react';
 import Navbar from './components/navbar';
 import { AuthProvider } from './auth/auth.context';
+import MemoriesPage from './pages/memories-page';
 const HomePage = React.lazy(() => import('./pages/home-page'));
 const NotFoundPage = React.lazy(() => import('./pages/not-found'));
 
@@ -18,6 +19,11 @@ function App() {
               <Route path="/" element={
                 <Suspense fallback={<></>}>
                   <HomePage/>
+                </Suspense>
+              }/>
+              <Route path="/memories" element={
+                <Suspense fallback={<></>}>
+                  <MemoriesPage/>
                 </Suspense>
               }/>
               <Route path="*" element={

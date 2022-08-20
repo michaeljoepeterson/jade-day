@@ -18,8 +18,8 @@ const Navbar = () => {
         authState
     } = useContext(AuthContext);
     const {user, loading} = authState;
-    const isLoggedIn = authState.user?.email ? true : false;
-    const isLoading = authState.loading;
+    const isLoggedIn = user?.email ? true : false;
+    const isLoading = loading;
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 

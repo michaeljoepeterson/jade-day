@@ -31,6 +31,7 @@ export interface IAuthContext{
     loginWithGoogle: () => Promise<any>;
     logout: () => Promise<any>;
     authState: IAuthState;
+    isLoggedIn: () => boolean;
 }
 
 const defaultContext: IAuthContext = {
@@ -42,7 +43,8 @@ const defaultContext: IAuthContext = {
     createUserWithEmail: async (email: string, pass: string) => null,
     loginWithGoogle: async () => null,
     logout: async () => null,
-    authState: {} as IAuthState
+    authState: {} as IAuthState,
+    isLoggedIn: () => false,
 }
 
 export const AuthContext = createContext<IAuthContext>(defaultContext);
@@ -127,7 +129,10 @@ export const AuthProvider = ({
         }
     }, []);
 
-    
+    const isLoggedIn = useCallback(() => {
+        return authState?.user?.email && authState?.authToken ? true : false
+    }, [authState]);
+
     /**
      * get/create the app user
      * @param email
@@ -165,7 +170,8 @@ export const AuthProvider = ({
             createUserWithEmail,
             loginWithGoogle,
             logout,
-            authState
+            authState,
+            isLoggedIn
         }}>
             {children}
         </AuthContext.Provider>

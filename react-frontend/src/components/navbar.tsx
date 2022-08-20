@@ -68,7 +68,7 @@ export const Navbar = () => {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-          <Typography variant="h6" sx={{ my: 2 }}>
+          <Typography variant="h6">
             Jade Day
           </Typography>
           <Divider />

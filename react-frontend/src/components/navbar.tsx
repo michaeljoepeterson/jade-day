@@ -87,7 +87,7 @@ const Navbar = () => {
     const drawerWidth = 240;
     const container = window !== undefined ? () => window.document.body : undefined;
     const loginButton = !isLoggedIn ? 
-    (<Button 
+    (<Button
     variant="contained" 
     color="secondary"
     onClick={(e) => setModal(true)}>

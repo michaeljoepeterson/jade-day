@@ -5,7 +5,7 @@ const CreateMemoryPage = () => {
     return(
         <div>
             <h4>Create a Memory</h4>
-            {/* <MemoryCalendar/> */}
+            <MemoryCalendar/>
         </div>
     )
 }

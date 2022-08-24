@@ -7,7 +7,7 @@ import { AuthContext } from "../auth/auth.context";
  * @param Component
  * @returns
  */
-const withLoggedIn = (Component: React.FC<PropsWithChildren>) => (props: React.PropsWithChildren) => {
+const withLoggedIn = (Component: React.FC<PropsWithChildren<any>>) => (props: React.PropsWithChildren) => {
     const {isLoggedIn, loading} = useContext(AuthContext);
     const [isChecked, setIsChecked] = useState<boolean>(false);
 

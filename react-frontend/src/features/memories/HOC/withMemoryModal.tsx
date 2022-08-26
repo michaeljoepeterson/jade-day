@@ -11,6 +11,7 @@ export interface IWithMemoryModal{
     isOpen: boolean;
     setDialogIsOpen: (isOpen: boolean) => void;
     setDisplayed: (dialogType: MemoryDialogType) => void;
+    setDialogSubTitle: (subTitle: string) => void;
 }
 
 /**
@@ -21,8 +22,10 @@ export interface IWithMemoryModal{
 const withMemoryModal = (Component: React.FC<PropsWithChildren<{
     memoryModal: IWithMemoryModal
 }>>) => (props: PropsWithChildren): React.ReactElement => {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [displayedDialog, setDisplayedDialog] = useState<MemoryDialogType>(MemoryDialogType.view);
+    const [title, setTitle] = useState<string>();
+    const [subTitle, setSubTitle] = useState<string>();
     
     const setDialogIsOpen = (isOpen: boolean) => {
         setIsOpen(isOpen);
@@ -32,18 +35,31 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
         setDisplayedDialog(displayed);
     }
 
+    const dialogClosed = () => {
+        setIsOpen(false);
+    }
+
+    const setDialogSubTitle = (subTitle: string) => {
+        setSubTitle(subTitle);
+    }
+
     return (
         <>
             <Component 
-            memoryModal={{
-                isOpen,
-                setDialogIsOpen,
-                setDisplayed
-            }}
-            {...props} />
+                memoryModal={{
+                    isOpen,
+                    setDialogIsOpen,
+                    setDisplayed,
+                    setDialogSubTitle
+                }}
+                {...props} 
+            />
             <MemoryModal
-            isOpen={isOpen}
-            dialogType={displayedDialog}
+                dialogClosed={dialogClosed}
+                isOpen={isOpen}
+                dialogType={displayedDialog}
+                subTitle={subTitle}
+                title={title}
             />
         </>
     );

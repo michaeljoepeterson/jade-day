@@ -1,5 +1,6 @@
 import { Dialog } from "@mui/material";
 import React, { PropsWithChildren, useState } from "react";
+import MemoryModal from "../memory-modal/memory-modal";
 
 export enum MemoryDialogType{
     view = 'view',
@@ -20,7 +21,7 @@ export interface IWithMemoryModal{
 const withMemoryModal = (Component: React.FC<PropsWithChildren<{
     memoryModal: IWithMemoryModal
 }>>) => (props: PropsWithChildren): React.ReactElement => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
     const [displayedDialog, setDisplayedDialog] = useState<MemoryDialogType>(MemoryDialogType.view);
     
     const setDialogIsOpen = (isOpen: boolean) => {
@@ -40,11 +41,10 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
                 setDisplayed
             }}
             {...props} />
-            <Dialog
-            open={isOpen}
-            >
-                <p>test</p>
-            </Dialog>
+            <MemoryModal
+            isOpen={isOpen}
+            dialogType={displayedDialog}
+            />
         </>
     );
 }

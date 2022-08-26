@@ -1,6 +1,6 @@
 const ViewMemoryModal = () => {
     return (
-        <></>
+        <>view</>
     )
 }
 

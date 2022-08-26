@@ -4,6 +4,7 @@ import { AuthContext } from "../auth/auth.context";
 
 /**
  * HOC to handle the logged in rules for a page
+ * could convert to hook
  * @param Component
  * @returns
  */

@@ -146,7 +146,6 @@ export const AuthProvider = ({
                     email
                 }
             });
-            console.log(res);
             return res.data?.user;
         }
         catch(e){

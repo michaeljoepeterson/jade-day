@@ -1,13 +1,16 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' 
-import React, { useEffect } from "react";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
+import React, { useCallback, useEffect } from "react";
 
 const MemoryCalendar = ({
     height = '45em',
-    startDate = new Date()
+    startDate = new Date(),
+    dayClicked
 }:{
     height?: string;
-    startDate?: Date
+    startDate?: Date;
+    dayClicked: (event: DateClickArg) => void;
 }) => {
     const calendar = React.createRef<FullCalendar>();
 
@@ -19,16 +22,28 @@ const MemoryCalendar = ({
         catch(e){
             console.warn(e);
         }
-    }, [startDate])
+    }, [startDate]);
+
+    const handleDateClicked = useCallback((event: DateClickArg) => {
+        console.log(event);
+        try{
+            dayClicked(event);
+        }
+        catch(e){
+            console.warn(e);
+        }
+    }, [startDate]);
 
     return(
         <div className="h-full">
             <FullCalendar
             ref={calendar}
             height={height}
-            plugins={[ dayGridPlugin ]}
+            plugins={[ dayGridPlugin, interactionPlugin ]}
             initialView="dayGridMonth"
-            initialDate={startDate}/>
+            initialDate={startDate}
+            dateClick={handleDateClicked}
+            />
         </div>
     )
 }

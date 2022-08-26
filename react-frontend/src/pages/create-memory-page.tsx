@@ -1,4 +1,6 @@
-import { useState } from "react"
+import { DateClickArg } from "@fullcalendar/interaction";
+import { useCallback, useState } from "react"
+import withMemoryModal from "../features/memories/HOC/withMemoryModal";
 import MemoryCalendar from "../features/memories/memory-calendar/memory-calendar"
 import withLoggedIn from "../HOC/withLoggedIn"
 
@@ -10,13 +12,18 @@ const CreateMemoryPage = () => {
         console.log('update date');
     }
 
+    const dayClicked = useCallback((event: DateClickArg) => {
+        console.log('parent', event);
+    }, [selectedDate]);
+
     return(
         <div>
             <h4 onClick={(e) => updateDate()}>Create a Memory</h4>
-            <MemoryCalendar 
+            <MemoryCalendar
+            dayClicked={dayClicked}
             startDate={selectedDate}/>
         </div>
     )
 }
 
-export default withLoggedIn(CreateMemoryPage);
+export default withLoggedIn(withMemoryModal(CreateMemoryPage));

@@ -14,3 +14,8 @@
 .nav-link-mobile-button{
   color: black;
 }
+/*size settings for ckeditor*/
+.ck-editor__editable_inline {
+    min-height: 200px;
+    max-height: 450px;
+}

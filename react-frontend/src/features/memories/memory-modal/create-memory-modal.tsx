@@ -1,5 +1,7 @@
-import { DialogTitle } from "@mui/material";
+import { DialogContent, DialogTitle, TextField } from "@mui/material";
 import { IBaseMemoryProps } from "./base-memory-props";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',
@@ -20,6 +22,18 @@ const CreateMemoryModal = ({
                     )}
                 </div>
             </DialogTitle>
+            <DialogContent>
+                <form>
+                    <TextField 
+                        variant="standard"
+                        label="Title"
+                    />
+                    <CKEditor
+                        
+                        editor={ClassicEditor}
+                    />
+                </form>
+            </DialogContent>
         </>
     );
 }

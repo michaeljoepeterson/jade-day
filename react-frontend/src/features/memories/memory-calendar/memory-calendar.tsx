@@ -43,6 +43,8 @@ const MemoryCalendar = ({
             initialView="dayGridMonth"
             initialDate={startDate}
             dateClick={handleDateClicked}
+            //todo add custom controls
+            headerToolbar={undefined}
             />
         </div>
     )

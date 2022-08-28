@@ -13,11 +13,12 @@ const MemoryModal = ({
     dialogType = MemoryDialogType.view,
     dialogClosed,
     title,
-    subTitle
+    subTitle,
+    date
 }: {
     isOpen?: boolean;
     dialogType?: MemoryDialogType;
-    dialogClosed: () => void
+    dialogClosed: () => void;
 } & IBaseMemoryProps) => {
     let dialogContent = null;
     switch(dialogType){
@@ -29,6 +30,7 @@ const MemoryModal = ({
                 <CreateMemoryModal 
                     title={title}
                     subTitle={subTitle}
+                    date={date}
                 />
             );
             break;

@@ -9,11 +9,11 @@ const CreateMemoryPage = ({
 }: {
     memoryModal: IWithMemoryModal
 }) => {
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const {setDialogIsOpen, setDisplayed, setDialogSubTitle} = memoryModal;
+    const [date, setDate] = useState<Date>(new Date());
+    const {setDialogIsOpen, setDisplayed, setDialogSubTitle, setSelectedDate} = memoryModal;
 
     const updateDate = () => {
-        setSelectedDate(new Date('2012/12/12'));
+        setDate(new Date('2012/12/12'));
         console.log('update date');
     }
 
@@ -23,14 +23,15 @@ const CreateMemoryPage = ({
         setDisplayed(MemoryDialogType.create);
         setDialogIsOpen(true);
         setDialogSubTitle(event.date.toDateString());
-    }, [selectedDate]);
+        setSelectedDate(event.date);
+    }, [setDate]);
     console.log(memoryModal);
     return(
         <div>
             <h4 onClick={(e) => updateDate()}>Create a Memory</h4>
             <MemoryCalendar
             dayClicked={dayClicked}
-            startDate={selectedDate}/>
+            startDate={date}/>
         </div>
     )
 }

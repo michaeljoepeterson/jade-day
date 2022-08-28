@@ -32,22 +32,11 @@ export interface IAuthContext{
     logout: () => Promise<any>;
     authState: IAuthState;
     isLoggedIn: () => boolean;
+    getAuthHeaders: () => any;
 }
 
-const defaultContext: IAuthContext = {
-    user: null,
-    authToken: null,
-    loading: false,
-    error: null,
-    loginWithEmail: async (email: string, pass: string) => null,
-    createUserWithEmail: async (email: string, pass: string) => null,
-    loginWithGoogle: async () => null,
-    logout: async () => null,
-    authState: {} as IAuthState,
-    isLoggedIn: () => false,
-}
 
-export const AuthContext = createContext<IAuthContext>(defaultContext);
+export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 const googleAuthProvider = new GoogleAuthProvider();
 
 export const AuthProvider = ({
@@ -133,6 +122,18 @@ export const AuthProvider = ({
         return authState?.user?.email && authState?.authToken ? true : false
     }, [authState]);
 
+    const getAuthHeaders = useCallback(() => {
+        const {authToken} = authState;
+        if(authToken){
+            return {
+                headers:{
+                    Authorization: `Bearer ${authToken}`
+                }
+            }
+        }
+        return {};
+    }, [authState])
+
     /**
      * get/create the app user
      * @param email
@@ -170,7 +171,8 @@ export const AuthProvider = ({
             loginWithGoogle,
             logout,
             authState,
-            isLoggedIn
+            isLoggedIn,
+            getAuthHeaders
         }}>
             {children}
         </AuthContext.Provider>

@@ -7,6 +7,7 @@ import { AuthProvider } from './auth/auth.context';
 import MemoriesPage from './pages/memories-page';
 import CreateMemoryPage from './pages/create-memory-page';
 import MainLayout from './components/main-layout';
+import { MemoryProvider } from './features/memories/contexts/memory.context';
 const HomePage = React.lazy(() => import('./pages/home-page'));
 const NotFoundPage = React.lazy(() => import('./pages/not-found'));
 
@@ -14,6 +15,7 @@ const NotFoundPage = React.lazy(() => import('./pages/not-found'));
 function App() {
   return (
     <AuthProvider>
+      <MemoryProvider>
       <BrowserRouter>
         <Navbar/>
         <div className="page">
@@ -47,6 +49,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
+      </MemoryProvider>
     </AuthProvider>
   );
 }

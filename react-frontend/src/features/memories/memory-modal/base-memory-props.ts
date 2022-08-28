@@ -3,4 +3,5 @@ export interface IBaseMemoryProps{
     subTitle?: string;
     //todo add memory type
     memory?: any;
+    date?: Date;
 }

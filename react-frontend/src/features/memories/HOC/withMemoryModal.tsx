@@ -12,6 +12,7 @@ export interface IWithMemoryModal{
     setDialogIsOpen: (isOpen: boolean) => void;
     setDisplayed: (dialogType: MemoryDialogType) => void;
     setDialogSubTitle: (subTitle: string) => void;
+    setSelectedDate: (date: Date) => void;
 }
 
 /**
@@ -26,7 +27,7 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
     const [displayedDialog, setDisplayedDialog] = useState<MemoryDialogType>(MemoryDialogType.view);
     const [title, setTitle] = useState<string>();
     const [subTitle, setSubTitle] = useState<string>();
-    
+    const [date, setDate] = useState<Date>();
     const setDialogIsOpen = (isOpen: boolean) => {
         setIsOpen(isOpen);
     }
@@ -43,6 +44,10 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
         setSubTitle(subTitle);
     }
 
+    const setSelectedDate = (date: Date) => {
+        setDate(date);
+    }
+
     return (
         <>
             <Component 
@@ -50,7 +55,8 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
                     isOpen,
                     setDialogIsOpen,
                     setDisplayed,
-                    setDialogSubTitle
+                    setDialogSubTitle,
+                    setSelectedDate
                 }}
                 {...props} 
             />
@@ -60,6 +66,7 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
                 dialogType={displayedDialog}
                 subTitle={subTitle}
                 title={title}
+                date={date}
             />
         </>
     );

@@ -2,9 +2,10 @@ import { Button, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { IBaseMemoryProps } from "./base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { INewMemory } from "../../../models/memories/new-memory";
+import { INewMemory } from "../../../../models/memories/new-memory";
 import { useState } from "react";
-import useMemoryRequests from "../hooks/useMemoryRequests";
+import useMemoryRequests from "../../hooks/useMemoryRequests";
+import ImageUpload from "../image-upload/image-upload";
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',
@@ -32,7 +33,6 @@ const CreateMemoryModal = ({
     };
 
     const updateDescription = (description: any) => {
-        console.log(description);
         const memory = {
             ...newMemory,
             description
@@ -59,6 +59,10 @@ const CreateMemoryModal = ({
         catch(e){
             console.warn(e);
         }
+    };
+
+    const handleImageAdded = (file: File) => {
+        console.log(file);
     }
 
     return (
@@ -89,6 +93,9 @@ const CreateMemoryModal = ({
                             editor={ClassicEditor}
                             onChange={(e: any, editor: any) => updateDescription(editor.getData())}
                         />
+                    </div>
+                    <div className="mt-4">
+                        <ImageUpload imageAdded={handleImageAdded}/>
                     </div>
                     <div className="mt-4 flex justify-between">
                         <Button 

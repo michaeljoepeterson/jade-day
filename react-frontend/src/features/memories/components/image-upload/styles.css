@@ -1,0 +1,31 @@
+.drop-file{
+    display: flex;
+    height: 92%;
+    width: 100%;
+    border: 1px black dashed;
+    align-items: center;
+    justify-content: center;
+    transition: all 500ms;
+    cursor: pointer;
+    padding: 1em;
+}
+
+.upload{
+    display: none;
+}
+
+.file-hovered{
+    background-color: rgba(219,239,255, 0.8);
+}
+
+.upload-container{
+    width: 100%;
+    height: 8em;
+    max-height: 50vh;
+}
+
+@media (min-width: 768px){
+    .upload-container{
+        height: 16em;
+    }
+}

@@ -1,6 +1,6 @@
 import { Dialog } from "@mui/material";
 import React, { PropsWithChildren, useState } from "react";
-import MemoryModal from "../memory-modal/memory-modal";
+import MemoryModal from "../components/memory-modal/memory-modal";
 
 export enum MemoryDialogType{
     view = 'view',

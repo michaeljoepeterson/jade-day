@@ -1,7 +1,7 @@
 import { DateClickArg } from "@fullcalendar/interaction";
 import { useCallback, useState } from "react"
 import withMemoryModal, { IWithMemoryModal, MemoryDialogType } from "../features/memories/HOC/withMemoryModal";
-import MemoryCalendar from "../features/memories/memory-calendar/memory-calendar"
+import MemoryCalendar from "../features/memories/components/memory-calendar/memory-calendar"
 import withLoggedIn from "../HOC/withLoggedIn"
 
 const CreateMemoryPage = ({

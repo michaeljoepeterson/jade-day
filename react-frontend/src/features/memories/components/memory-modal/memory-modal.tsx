@@ -1,5 +1,5 @@
 import { Dialog } from "@mui/material";
-import { MemoryDialogType } from "../HOC/withMemoryModal";
+import { MemoryDialogType } from "../../HOC/withMemoryModal";
 import { IBaseMemoryProps } from "./base-memory-props";
 import CreateMemoryModal from "./create-memory-modal";
 import ViewMemoryModal from "./view-memory-modal";
@@ -51,6 +51,8 @@ const MemoryModal = ({
         <Dialog
         open={isOpen}
         onClose={handleclose}
+        fullWidth={true}
+        maxWidth="lg"
         >
             {dialogContent}
         </Dialog>

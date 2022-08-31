@@ -3,15 +3,18 @@ import { IBaseMemoryProps } from "./base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { INewMemory } from "../../../models/memories/new-memory";
-import { useContext, useState } from "react";
-import { MemoryContext } from "../contexts/memory.context";
+import { useState } from "react";
+import useMemoryRequests from "../hooks/useMemoryRequests";
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',
     subTitle,
-    date
-}: IBaseMemoryProps) => {
-    const {createMemory} = useContext(MemoryContext);
+    date,
+    cancelClicked
+}:{
+    cancelClicked: () => void
+} & IBaseMemoryProps) => {
+    const {createMemory} = useMemoryRequests();
 
     const [newMemory, setNewMemory] = useState<INewMemory>({
         summary: null,
@@ -45,7 +48,16 @@ const CreateMemoryModal = ({
             await createMemory(newMemory);
         }
         catch(e){
+            console.warn(e);
+        }
+    };
 
+    const handleCancelClicked = () => {
+        try{
+            cancelClicked()
+        }
+        catch(e){
+            console.warn(e);
         }
     }
 
@@ -65,16 +77,20 @@ const CreateMemoryModal = ({
             </DialogTitle>
             <DialogContent>
                 <form onSubmit={(e) => saveMemory(e)}>
-                    <TextField 
-                        variant="standard"
-                        label="Title"
-                        onChange={(e) => updateSummary(e.currentTarget?.value)}
-                    />
-                    <CKEditor
-                        editor={ClassicEditor}
-                        onChange={(e: any, editor: any) => updateDescription(editor.getData())}
-                    />
-                    <div>
+                    <div className="mt-4">
+                        <TextField
+                            variant="standard"
+                            label="Title"
+                            onChange={(e) => updateSummary(e.currentTarget?.value)}
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <CKEditor
+                            editor={ClassicEditor}
+                            onChange={(e: any, editor: any) => updateDescription(editor.getData())}
+                        />
+                    </div>
+                    <div className="mt-4 flex justify-between">
                         <Button 
                         type="submit"
                         variant="outlined">
@@ -82,7 +98,9 @@ const CreateMemoryModal = ({
                         </Button>
                         <Button 
                         type="button"
-                        variant="outlined">
+                        color="secondary"
+                        variant="outlined"
+                        onClick={() => handleCancelClicked()}>
                             Cancel
                         </Button>
                     </div>

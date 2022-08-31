@@ -1,21 +1,19 @@
 import axios from "axios";
-import { PropsWithChildren, createContext, useCallback, useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../../auth/auth.context";
 import { apiUrl } from "../../../config";
 import { IMemory } from "../../../models/memories/memory";
 import { INewMemory } from "../../../models/memories/new-memory";
 
-export interface IMemoryContext{
+export interface IMemoryRequests{
     createMemory: (memory: INewMemory) => Promise<IMemory> 
 }
 
-export const MemoryContext = createContext<IMemoryContext>({} as IMemoryContext);
-
-export const MemoryProvider = ({
-    children
-}: PropsWithChildren<any>) => {
+/**
+ * hook to provide available memory requests
+ */
+const useMemoryRequests = (): IMemoryRequests => {
     const {getAuthHeaders} = useContext(AuthContext);
-
     const createMemory = async (memory: INewMemory) => {
         try{
             const authHeaders = getAuthHeaders();
@@ -31,12 +29,9 @@ export const MemoryProvider = ({
         }
     };
 
-    return (
-        <MemoryContext.Provider
-        value={{
-            createMemory
-        }}>
-            {children}
-        </MemoryContext.Provider>
-    );
+    return {
+        createMemory
+    }
 }
+
+export default useMemoryRequests;

@@ -21,6 +21,16 @@ const MemoryModal = ({
     dialogClosed: () => void;
 } & IBaseMemoryProps) => {
     let dialogContent = null;
+
+    const handleclose = () => {
+        try{
+            dialogClosed()
+        }
+        catch(e){
+            console.warn(e);
+        }
+    }
+
     switch(dialogType){
         case MemoryDialogType.view:
             dialogContent = (<ViewMemoryModal />);
@@ -31,18 +41,10 @@ const MemoryModal = ({
                     title={title}
                     subTitle={subTitle}
                     date={date}
+                    cancelClicked={handleclose}
                 />
             );
             break;
-    }
-
-    const handleclose = () => {
-        try{
-            dialogClosed()
-        }
-        catch(e){
-            console.warn(e);
-        }
     }
 
     return (

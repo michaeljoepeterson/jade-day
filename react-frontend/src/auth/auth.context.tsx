@@ -33,6 +33,7 @@ export interface IAuthContext{
     authState: IAuthState;
     isLoggedIn: () => boolean;
     getAuthHeaders: () => any;
+    getUser: () => IUser | null;
 }
 
 
@@ -134,6 +135,10 @@ export const AuthProvider = ({
         return {};
     }, [authState])
 
+    const getUser = useCallback(() => {
+        return authState?.user;
+    }, [authState]);
+
     /**
      * get/create the app user
      * @param email
@@ -172,7 +177,8 @@ export const AuthProvider = ({
             logout,
             authState,
             isLoggedIn,
-            getAuthHeaders
+            getAuthHeaders,
+            getUser
         }}>
             {children}
         </AuthContext.Provider>

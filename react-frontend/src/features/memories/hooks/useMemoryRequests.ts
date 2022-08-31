@@ -6,7 +6,8 @@ import { IMemory } from "../../../models/memories/memory";
 import { INewMemory } from "../../../models/memories/new-memory";
 
 export interface IMemoryRequests{
-    createMemory: (memory: INewMemory) => Promise<IMemory> 
+    createMemory: (memory: INewMemory) => Promise<IMemory>;
+    uploadImage: (file: File) => Promise<any>;
 }
 
 /**
@@ -24,13 +25,29 @@ const useMemoryRequests = (): IMemoryRequests => {
             return data.memory;
         }
         catch(e){
-            console.warn(e);
             throw e;
         }
     };
 
+    const uploadImage = async (image: File) => {
+        try{
+            const formData = new FormData();
+            formData.append('image', image, image.name);
+            const authHeaders = getAuthHeaders();
+            authHeaders.headers['Content-Type'] = 'multipart/form-data';
+            console.log(authHeaders);
+            const response = await axios.post(`${apiUrl}/memory/image/testid`, formData, authHeaders);
+            console.log(response.data);
+            return response.data;
+        }
+        catch(e){
+            throw e;
+        }
+    }
+
     return {
-        createMemory
+        createMemory,
+        uploadImage
     }
 }
 

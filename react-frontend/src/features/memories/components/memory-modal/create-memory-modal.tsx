@@ -6,6 +6,7 @@ import { INewMemory } from "../../../../models/memories/new-memory";
 import { useState } from "react";
 import useMemoryRequests from "../../hooks/useMemoryRequests";
 import ImageUpload from "../image-upload/image-upload";
+import useImageUpload from "../../../../firebase/hooks/useImageUpload";
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',
@@ -16,6 +17,7 @@ const CreateMemoryModal = ({
     cancelClicked: () => void
 } & IBaseMemoryProps) => {
     const {createMemory} = useMemoryRequests();
+    const {uploadImage} = useImageUpload();
 
     const [newMemory, setNewMemory] = useState<INewMemory>({
         summary: null,
@@ -54,7 +56,7 @@ const CreateMemoryModal = ({
 
     const handleCancelClicked = () => {
         try{
-            cancelClicked()
+            cancelClicked();
         }
         catch(e){
             console.warn(e);
@@ -63,6 +65,8 @@ const CreateMemoryModal = ({
 
     const handleImageAdded = (file: File) => {
         console.log(file);
+        //todo remove
+        uploadImage(file, 'test');
     }
 
     return (

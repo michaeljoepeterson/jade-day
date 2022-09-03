@@ -14,7 +14,7 @@ const CreateMemoryPage = ({
 }) => {
     const [date, setDate] = useState<Date>(new Date());
     const [memories, setMemories] = useState<IMemory[]>([]);
-    const {setDialogIsOpen, setDisplayed, setDialogSubTitle, setSelectedDate} = memoryModal;
+    const {setDialogIsOpen, setDisplayed, setDialogSubTitle, setSelectedDate, setSelectedMemory} = memoryModal;
     const {getMemories} = useMemoryRequests();
     const {openSnackBar} = useContext(NotificationContext);
 
@@ -45,6 +45,7 @@ const CreateMemoryPage = ({
         console.log(existingMemory, memories);
         setDisplayed(dialogType);
         setDialogIsOpen(true);
+        setSelectedMemory(existingMemory);
         setDialogSubTitle(date.toDateString());
         setSelectedDate(date);
     }, [memories]);

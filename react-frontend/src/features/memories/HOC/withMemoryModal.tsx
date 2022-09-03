@@ -1,5 +1,6 @@
 import { Dialog } from "@mui/material";
 import React, { PropsWithChildren, useState } from "react";
+import { IMemory } from "../../../models/memories/memory";
 import CreateMemoryModal from "../components/memory-modal/create-memory-modal";
 import ViewMemoryModal from "../components/memory-modal/view-memory-modal";
 
@@ -14,6 +15,7 @@ export interface IWithMemoryModal{
     setDisplayed: (dialogType: MemoryDialogType) => void;
     setDialogSubTitle: (subTitle: string) => void;
     setSelectedDate: (date: Date) => void;
+    setSelectedMemory: (memory: IMemory | null | undefined) => void;
 }
 
 /**
@@ -29,6 +31,7 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
     const [title, setTitle] = useState<string>();
     const [subTitle, setSubTitle] = useState<string>();
     const [date, setDate] = useState<Date>();
+    const [memory, setMemory] = useState<IMemory | null | undefined>();
     const setDialogIsOpen = (isOpen: boolean) => {
         setIsOpen(isOpen);
     }
@@ -39,6 +42,7 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
 
     const dialogClosed = () => {
         setIsOpen(false);
+        setMemory(null);
     }
 
     const setDialogSubTitle = (subTitle: string) => {
@@ -49,11 +53,15 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
         setDate(date);
     }
 
+    const setSelectedMemory = (memory: IMemory | null | undefined) => {
+        setMemory(memory);
+    }
+
     let dialogContent = null;
 
     const handleclose = () => {
         try{
-            dialogClosed()
+            dialogClosed();
         }
         catch(e){
             console.warn(e);
@@ -62,7 +70,11 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
 
     switch(displayedDialog){
         case MemoryDialogType.view:
-            dialogContent = (<ViewMemoryModal />);
+            dialogContent = (
+                <ViewMemoryModal 
+                    memory={memory as IMemory}
+                />
+            );
             break;
         case MemoryDialogType.create:
             dialogContent = (
@@ -84,7 +96,8 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
                     setDialogIsOpen,
                     setDisplayed,
                     setDialogSubTitle,
-                    setSelectedDate
+                    setSelectedDate,
+                    setSelectedMemory
                 }}
                 {...props} 
             />

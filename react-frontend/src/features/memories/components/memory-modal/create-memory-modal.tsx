@@ -56,6 +56,7 @@ const CreateMemoryModal = ({
                 await uploadImage(image, memory.id);
             }
             openSnackBar('Memory Created!');
+            cancelClicked();
         }
         catch(e){
             console.warn(e);

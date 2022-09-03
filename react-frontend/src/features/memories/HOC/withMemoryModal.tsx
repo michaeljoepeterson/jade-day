@@ -1,6 +1,7 @@
 import { Dialog } from "@mui/material";
 import React, { PropsWithChildren, useState } from "react";
-import MemoryModal from "../components/memory-modal/memory-modal";
+import CreateMemoryModal from "../components/memory-modal/create-memory-modal";
+import ViewMemoryModal from "../components/memory-modal/view-memory-modal";
 
 export enum MemoryDialogType{
     view = 'view',
@@ -48,6 +49,33 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
         setDate(date);
     }
 
+    let dialogContent = null;
+
+    const handleclose = () => {
+        try{
+            dialogClosed()
+        }
+        catch(e){
+            console.warn(e);
+        }
+    }
+
+    switch(displayedDialog){
+        case MemoryDialogType.view:
+            dialogContent = (<ViewMemoryModal />);
+            break;
+        case MemoryDialogType.create:
+            dialogContent = (
+                <CreateMemoryModal 
+                    title={title}
+                    subTitle={subTitle}
+                    date={date}
+                    cancelClicked={handleclose}
+                />
+            );
+            break;
+    }
+
     return (
         <>
             <Component 
@@ -60,14 +88,14 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
                 }}
                 {...props} 
             />
-            <MemoryModal
-                dialogClosed={dialogClosed}
-                isOpen={isOpen}
-                dialogType={displayedDialog}
-                subTitle={subTitle}
-                title={title}
-                date={date}
-            />
+            <Dialog
+                open={isOpen}
+                onClose={handleclose}
+                fullWidth={true}
+                maxWidth="lg"
+            >
+                {dialogContent}
+            </Dialog>
         </>
     );
 }

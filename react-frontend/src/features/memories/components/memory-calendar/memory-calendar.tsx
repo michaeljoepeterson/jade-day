@@ -1,4 +1,4 @@
-import FullCalendar from "@fullcalendar/react";
+import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' 
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
 import React, { useCallback, useEffect, useMemo } from "react";
@@ -8,11 +8,13 @@ const MemoryCalendar = ({
     height = '45em',
     startDate = new Date(),
     dayClicked,
-    memories = []
+    memories = [],
+    eventClicked
 }:{
     height?: string;
     startDate?: Date;
-    dayClicked: (event: DateClickArg) => void;
+    dayClicked: (event: Date) => void;
+    eventClicked: (event: Date) => void;
     memories?: IMemory[];
 }) => {
     const calendar = React.createRef<FullCalendar>();
@@ -32,18 +34,24 @@ const MemoryCalendar = ({
     }, [startDate]);
 
     const handleDateClicked = useCallback((event: DateClickArg) => {
-        console.log(event);
         try{
-            dayClicked(event);
+            dayClicked(event.date);
         }
         catch(e){
             console.warn(e);
         }
-    }, [startDate]);
+    }, [startDate, memories]);
 
-    const handleEventClicked = useCallback(() => {
-        console.log('event clicked');
-    }, [memories]);
+    const handleEventClicked = useCallback((event: EventClickArg) => {
+        try{
+            if(event.event.start){
+                eventClicked(event.event.start);
+            }
+        }
+        catch(e){
+            console.warn(e);
+        }
+    }, [memories, startDate]);
 
     return(
         <div className="h-full">

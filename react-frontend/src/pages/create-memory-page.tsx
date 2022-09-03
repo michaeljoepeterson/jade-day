@@ -22,14 +22,8 @@ const CreateMemoryPage = ({
         setDate(new Date('2012/12/12'));
         console.log('update date');
     }
-
-    const dayClicked = useCallback((event: DateClickArg) => {
-        setDisplayed(MemoryDialogType.create);
-        setDialogIsOpen(true);
-        setDialogSubTitle(event.date.toDateString());
-        setSelectedDate(event.date);
-    }, [setDate]);
-
+    console.log('render', memories);
+    
     useEffect(() => {
         const geUserMemories = async () => {
             try{
@@ -44,13 +38,26 @@ const CreateMemoryPage = ({
         geUserMemories();
     }, []);
 
+    const dayClicked = useCallback((date: Date) => {
+        const existingMemory = memories.find(memory => memory.date?.toDateString() === date.toDateString());
+        const dialogType = existingMemory ? MemoryDialogType.view : MemoryDialogType.create;
+        console.log(date);
+        console.log(existingMemory, memories);
+        setDisplayed(dialogType);
+        setDialogIsOpen(true);
+        setDialogSubTitle(date.toDateString());
+        setSelectedDate(date);
+    }, [memories]);
+
     return(
         <div>
             <h4 onClick={(e) => updateDate()}>Create a Memory</h4>
             <MemoryCalendar
-            dayClicked={dayClicked}
-            startDate={date}
-            memories={memories}/>
+                eventClicked={dayClicked}
+                dayClicked={dayClicked}
+                startDate={date}
+                memories={memories}
+            />
         </div>
     )
 }

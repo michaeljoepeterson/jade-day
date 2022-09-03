@@ -1,13 +1,16 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import MemoryImage from '../memory-image/memory-image';
 import './styles.css';
 
 const ImageUpload = ({
-    imageAdded
+    imageAdded,
+    imageUrl
 }: {
     imageAdded: (file: File) => any;
+    imageUrl?: string;
 }) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
-    const [imageUrl, setImageUrl] = useState<string>();
+    const [previewUrl, setPreviewUrl] = useState<string | undefined | null>(imageUrl);
     const fileInput = useRef<any>(null);
     const handleDragOver = (event: any) => {
         event.preventDefault();
@@ -27,7 +30,7 @@ const ImageUpload = ({
                 //url for image preview
                 const url = URL.createObjectURL(file);
                 console.log(url);
-                setImageUrl(url);
+                setPreviewUrl(url);
                 imageAdded(file);
             }
         }
@@ -42,9 +45,21 @@ const ImageUpload = ({
             const file = files[0];
             const url = URL.createObjectURL(file);
             console.log(url);
-            setImageUrl(url);
+            setPreviewUrl(url);
             imageAdded(file);
         }
+    }
+
+    const clearImage = useCallback(() => {
+        setPreviewUrl(null);
+    }, [previewUrl])
+
+    if(previewUrl){
+        return (
+            <MemoryImage 
+            clearImage={clearImage}
+            url={previewUrl}/>
+        );
     }
 
     return (

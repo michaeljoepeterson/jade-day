@@ -25,6 +25,8 @@ const CreateMemoryModal = ({
         date: date ? date : null
     });
 
+    const [image, setImage] = useState<File | null>(null);
+
     const updateSummary = (summary: string) => {
         const memory = {
             ...newMemory,
@@ -47,7 +49,10 @@ const CreateMemoryModal = ({
         event.preventDefault();
         console.log('new memory', newMemory);
         try{
-            await createMemory(newMemory);
+            const memory = await createMemory(newMemory);
+            if(image && memory.id){
+                await uploadImage(image, memory.id);
+            }
         }
         catch(e){
             console.warn(e);
@@ -65,8 +70,7 @@ const CreateMemoryModal = ({
 
     const handleImageAdded = (file: File) => {
         console.log(file);
-        //todo remove
-        uploadImage(file, 'test');
+        setImage(file);
     }
 
     return (

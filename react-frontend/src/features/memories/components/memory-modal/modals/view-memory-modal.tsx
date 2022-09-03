@@ -1,5 +1,5 @@
 import { DialogContent, DialogTitle, TextField } from "@mui/material";
-import { IBaseMemoryProps } from "../../../models/base-memory-props";
+import { IBaseMemoryModalProps } from "../../../models/base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import MemoryImage from "../../memory-image/memory-image";
@@ -9,7 +9,7 @@ const ViewMemoryModal = ({
     image
 }: {
     image?: string | null;
-} & IBaseMemoryProps) => {
+} & IBaseMemoryModalProps) => {
     if(!memory){
         return(
             <>

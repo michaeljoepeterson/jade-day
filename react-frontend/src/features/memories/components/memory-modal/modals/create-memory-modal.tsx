@@ -1,5 +1,5 @@
 import { Button, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { IBaseMemoryProps } from "../../../models/base-memory-props";
+import { IBaseMemoryModalProps } from "../../../models/base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { INewMemory } from "../../../../../models/memories/new-memory";
@@ -16,7 +16,7 @@ const CreateMemoryModal = ({
     cancelClicked
 }:{
     cancelClicked: () => void
-} & IBaseMemoryProps) => {
+} & IBaseMemoryModalProps) => {
     const {createMemory} = useMemoryRequests();
     const {uploadImage} = useImageUpload();
     const {openSnackBar} = useContext(NotificationContext);

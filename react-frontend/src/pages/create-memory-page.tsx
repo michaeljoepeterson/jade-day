@@ -1,20 +1,19 @@
 import { useCallback, useState, useEffect, useContext } from "react"
-import withMemoryModal, { IWithMemoryModal, MemoryDialogType } from "../features/memories/HOC/withMemoryModal";
 import MemoryCalendar from "../features/memories/components/memory-calendar/memory-calendar"
 import withLoggedIn from "../HOC/withLoggedIn"
 import { IMemory } from "../models/memories/memory";
 import useMemoryRequests from "../features/memories/hooks/useMemoryRequests";
 import { NotificationContext } from "../contexts/notification.context";
 import useImageUpload from "../firebase/hooks/useImageUpload";
+import MemoryModal, { MemoryDialogType } from "../features/memories/components/memory-modal/memory-modal";
 
-const CreateMemoryPage = ({
-    memoryModal
-}: {
-    memoryModal: IWithMemoryModal
-}) => {
+const CreateMemoryPage = () => {
     const [date, setDate] = useState<Date>(new Date());
     const [memories, setMemories] = useState<IMemory[]>([]);
-    const {setDialogIsOpen, setDisplayed, setDialogSubTitle, setSelectedDate, setSelectedMemory, setSelectedImage} = memoryModal;
+    const [dialogIsOpen, setDialogIsOpen] = useState<boolean>(false);
+    const [image, setImage] = useState<string | null>(null);
+    const [displayed, setDisplayed] = useState<MemoryDialogType>();
+    const [selectedMemory, setSelectedMemory] = useState<IMemory | undefined | null>();
     const {getMemories} = useMemoryRequests();
     const {openSnackBar} = useContext(NotificationContext);
     const {getImage} = useImageUpload();
@@ -23,7 +22,11 @@ const CreateMemoryPage = ({
         setDate(new Date('2012/12/12'));
         console.log('update date');
     }
-    console.log('render', memories);
+
+    const handleDialogClosed = useCallback(() => {
+        setDialogIsOpen(false);
+    }, []);
+
     
     useEffect(() => {
         const geUserMemories = async () => {
@@ -51,9 +54,8 @@ const CreateMemoryPage = ({
         setDisplayed(dialogType);
         setDialogIsOpen(true);
         setSelectedMemory(existingMemory);
-        setDialogSubTitle(date.toDateString());
-        setSelectedDate(date);
-        setSelectedImage(image);
+        setDate(date);
+        setImage(image);
     }, [memories]);
 
     return(
@@ -65,8 +67,16 @@ const CreateMemoryPage = ({
                 startDate={date}
                 memories={memories}
             />
+            <MemoryModal
+                memory={selectedMemory}
+                image={image}
+                displayedDialog={displayed}
+                isOpen={dialogIsOpen}
+                dialogClosed={handleDialogClosed}
+                date={date}
+            />
         </div>
     )
 }
 
-export default withLoggedIn(withMemoryModal(CreateMemoryPage));
+export default withLoggedIn(CreateMemoryPage);

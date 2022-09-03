@@ -1,8 +1,8 @@
 import { IMemory } from "../../../models/memories/memory";
 
-export interface IBaseMemoryProps{
+export interface IBaseMemoryModalProps{
     title?: string;
     subTitle?: string;
-    memory?: IMemory;
+    memory?: IMemory | null;
     date?: Date;
 }

@@ -1,4 +1,4 @@
-import { IMemory } from "../../../../models/memories/memory";
+import { IMemory } from "../../../models/memories/memory";
 
 export interface IBaseMemoryProps{
     title?: string;

@@ -1,4 +1,3 @@
-import { DateClickArg } from "@fullcalendar/interaction";
 import { useCallback, useState, useEffect, useContext } from "react"
 import withMemoryModal, { IWithMemoryModal, MemoryDialogType } from "../features/memories/HOC/withMemoryModal";
 import MemoryCalendar from "../features/memories/components/memory-calendar/memory-calendar"
@@ -6,6 +5,7 @@ import withLoggedIn from "../HOC/withLoggedIn"
 import { IMemory } from "../models/memories/memory";
 import useMemoryRequests from "../features/memories/hooks/useMemoryRequests";
 import { NotificationContext } from "../contexts/notification.context";
+import useImageUpload from "../firebase/hooks/useImageUpload";
 
 const CreateMemoryPage = ({
     memoryModal
@@ -14,9 +14,10 @@ const CreateMemoryPage = ({
 }) => {
     const [date, setDate] = useState<Date>(new Date());
     const [memories, setMemories] = useState<IMemory[]>([]);
-    const {setDialogIsOpen, setDisplayed, setDialogSubTitle, setSelectedDate, setSelectedMemory} = memoryModal;
+    const {setDialogIsOpen, setDisplayed, setDialogSubTitle, setSelectedDate, setSelectedMemory, setSelectedImage} = memoryModal;
     const {getMemories} = useMemoryRequests();
     const {openSnackBar} = useContext(NotificationContext);
+    const {getImage} = useImageUpload();
 
     const updateDate = () => {
         setDate(new Date('2012/12/12'));
@@ -38,16 +39,21 @@ const CreateMemoryPage = ({
         geUserMemories();
     }, []);
 
-    const dayClicked = useCallback((date: Date) => {
+    const dayClicked = useCallback(async (date: Date) => {
         const existingMemory = memories.find(memory => memory.date?.toDateString() === date.toDateString());
         const dialogType = existingMemory ? MemoryDialogType.view : MemoryDialogType.create;
         console.log(date);
         console.log(existingMemory, memories);
+        let image = null;
+        if(existingMemory){
+            image = await getImage(existingMemory.id);
+        }
         setDisplayed(dialogType);
         setDialogIsOpen(true);
         setSelectedMemory(existingMemory);
         setDialogSubTitle(date.toDateString());
         setSelectedDate(date);
+        setSelectedImage(image);
     }, [memories]);
 
     return(

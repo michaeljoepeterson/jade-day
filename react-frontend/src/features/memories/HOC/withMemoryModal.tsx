@@ -16,8 +16,9 @@ export interface IWithMemoryModal{
     setDialogSubTitle: (subTitle: string) => void;
     setSelectedDate: (date: Date) => void;
     setSelectedMemory: (memory: IMemory | null | undefined) => void;
+    setSelectedImage: (image: string | null | undefined) => void
 }
-
+//todo change to component asap
 /**
  * HOC to centralize memory modal functionality and offload from component
  * @param Component
@@ -32,6 +33,7 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
     const [subTitle, setSubTitle] = useState<string>();
     const [date, setDate] = useState<Date>();
     const [memory, setMemory] = useState<IMemory | null | undefined>();
+    const [image, setImage] = useState<string | null | undefined>(null);
     const setDialogIsOpen = (isOpen: boolean) => {
         setIsOpen(isOpen);
     }
@@ -43,6 +45,7 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
     const dialogClosed = () => {
         setIsOpen(false);
         setMemory(null);
+        setImage(null);
     }
 
     const setDialogSubTitle = (subTitle: string) => {
@@ -55,6 +58,10 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
 
     const setSelectedMemory = (memory: IMemory | null | undefined) => {
         setMemory(memory);
+    }
+
+    const setSelectedImage = (image: string | null | undefined) => {
+        setImage(image);
     }
 
     let dialogContent = null;
@@ -71,7 +78,8 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
     switch(displayedDialog){
         case MemoryDialogType.view:
             dialogContent = (
-                <ViewMemoryModal 
+                <ViewMemoryModal
+                    image={image}
                     memory={memory as IMemory}
                 />
             );
@@ -97,7 +105,8 @@ const withMemoryModal = (Component: React.FC<PropsWithChildren<{
                     setDisplayed,
                     setDialogSubTitle,
                     setSelectedDate,
-                    setSelectedMemory
+                    setSelectedMemory,
+                    setSelectedImage
                 }}
                 {...props} 
             />

@@ -1,9 +1,10 @@
-import { getStorage, ref, uploadBytes, connectStorageEmulator } from "firebase/storage";
+import { getStorage, ref, uploadBytes, connectStorageEmulator, getDownloadURL } from "firebase/storage";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/auth.context";
 
 export interface IImageUpload{
-    uploadImage: (file: File, id: string) => Promise<any>
+  uploadImage: (file: File, id: string) => Promise<any>;
+  getImage: (id: string) => Promise<string | null>;
 }
 
 const useImageUpload = (): IImageUpload => {
@@ -36,8 +37,29 @@ const useImageUpload = (): IImageUpload => {
         }
     }
 
+    const getImage = async (id: string) => {
+      try{
+        const user = getUser();
+        if(!user){
+          return null;
+        }
+
+        let path = `${imagePath}/${user.email}/${id}`;
+        let url = await getDownloadURL(ref(storageRef, path));
+        return url;
+      }
+      catch(e: any){
+        if(e?.code?.includes('object-not-found')){
+          return null;
+        }
+        console.warn(e);
+        throw e;
+      }
+    }
+
     return {
-        uploadImage
+        uploadImage,
+        getImage
     }
 }
 

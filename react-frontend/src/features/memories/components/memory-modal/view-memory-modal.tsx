@@ -2,10 +2,14 @@ import { DialogContent, DialogTitle, TextField } from "@mui/material";
 import { IBaseMemoryProps } from "./base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import MemoryImage from "../memory-image/memory-image";
 
 const ViewMemoryModal = ({
-    memory
-}: IBaseMemoryProps) => {
+    memory,
+    image
+}: {
+    image?: string | null;
+} & IBaseMemoryProps) => {
     if(!memory){
         return(
             <>
@@ -26,7 +30,7 @@ const ViewMemoryModal = ({
             </DialogTitle>
             <DialogContent>
                 <div>
-                <div className="mt-4">
+                    <div className="mt-4">
                         <TextField
                             variant="standard"
                             label="Title"
@@ -43,6 +47,14 @@ const ViewMemoryModal = ({
                                 toolbar: []
                             }}
                         />
+                    </div>
+                    <div>
+                        {
+                            image && 
+                            <MemoryImage
+                                url={image}
+                            />
+                        }
                     </div>
                 </div>
             </DialogContent>

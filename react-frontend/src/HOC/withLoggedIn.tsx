@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../auth/auth.context";
+import { AuthContext } from "../contexts/auth.context";
 
 /**
  * HOC to handle the logged in rules for a page

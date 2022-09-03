@@ -3,6 +3,7 @@ const { memoryDb } = require('../db/memory-db');
 const { Memory } = require('../models/memory');
 const { checkAuth } = require('../middleware/checkAuth');
 const { checkRole } = require('../middleware/checkRole');
+const { imageStorage } = require('../storage/storage');
 const router = express.Router();
 
 router.use(checkAuth);
@@ -47,6 +48,31 @@ router.get('/:email', async (req, res, next) => {
             message: 'Memories found',
             memories
         });
+    }
+    catch(e){
+        res.err = e;
+        next();
+    }
+});
+
+router.post('/image/:id', async (req, res, next) => {
+    
+    try{
+        upload(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+                console.log(err);
+            }
+            next();
+        })
+        const {id} = req.params;
+        const {image, name} = req.body;
+        console.log(id);
+        console.log(name);
+        console.log(req.files);
+        imageStorage.saveImage(req.file, 'test', id);
+        return res.json({
+            message: 'Uploaded image'
+        })
     }
     catch(e){
         res.err = e;

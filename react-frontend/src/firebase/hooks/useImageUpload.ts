@@ -1,6 +1,6 @@
 import { getStorage, ref, uploadBytes, connectStorageEmulator } from "firebase/storage";
 import { useContext } from "react";
-import { AuthContext } from "../../auth/auth.context";
+import { AuthContext } from "../../contexts/auth.context";
 
 export interface IImageUpload{
     uploadImage: (file: File, id: string) => Promise<any>

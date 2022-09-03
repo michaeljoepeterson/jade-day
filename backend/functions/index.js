@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const { router: mainRouter} = require('./routers/main-router');
 const { cors } = require('./middleware/cors');
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors);
 app.use('/api',mainRouter);

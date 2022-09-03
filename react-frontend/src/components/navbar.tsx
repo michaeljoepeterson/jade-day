@@ -3,7 +3,7 @@ import { useCallback, useContext, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import AuthModal from './auth/auth-modal';
-import { AuthContext } from '../auth/auth.context';
+import { AuthContext } from '../contexts/auth.context';
 
 /**
  * simple mobile responsive placeholder navbar mainly for demo purposes

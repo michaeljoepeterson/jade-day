@@ -20,7 +20,7 @@ const MemoryImage = ({
                 clearImage && 
                 <IconButton 
                 onClick={(e) => clearImage()}
-                className='text-secondary'>
+                className="text-secondary">
                     <CloseIcon/>
                 </IconButton>
             }

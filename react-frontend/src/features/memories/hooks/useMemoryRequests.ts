@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext } from "react";
-import { AuthContext } from "../../../auth/auth.context";
+import { AuthContext } from "../../../contexts/auth.context";
 import { apiUrl } from "../../../config";
 import { IMemory } from "../../../models/memories/memory";
 import { INewMemory } from "../../../models/memories/new-memory";

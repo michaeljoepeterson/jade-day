@@ -3,10 +3,11 @@ import { IBaseMemoryProps } from "./base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { INewMemory } from "../../../../models/memories/new-memory";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useMemoryRequests from "../../hooks/useMemoryRequests";
 import ImageUpload from "../image-upload/image-upload";
 import useImageUpload from "../../../../firebase/hooks/useImageUpload";
+import { NotificationContext } from "../../../../contexts/notification.context";
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',
@@ -18,6 +19,7 @@ const CreateMemoryModal = ({
 } & IBaseMemoryProps) => {
     const {createMemory} = useMemoryRequests();
     const {uploadImage} = useImageUpload();
+    const {openSnackBar} = useContext(NotificationContext);
 
     const [newMemory, setNewMemory] = useState<INewMemory>({
         summary: null,
@@ -53,9 +55,11 @@ const CreateMemoryModal = ({
             if(image && memory.id){
                 await uploadImage(image, memory.id);
             }
+            openSnackBar('Memory Created!');
         }
         catch(e){
             console.warn(e);
+            openSnackBar(`Error creating memory ${e}`);
         }
     };
 

@@ -27,7 +27,6 @@ const CreateMemoryModal = ({
     memoryCreated?: (memory: IMemory) => void; 
 } & IBaseMemoryModalProps) => {
     const {createMemory} = useMemoryRequests();
-    const {uploadImage} = useImageUpload();
     const {openSnackBar} = useContext(NotificationContext);
 
     const [newMemory, setNewMemory] = useState<INewMemory>({
@@ -59,10 +58,7 @@ const CreateMemoryModal = ({
     const saveMemory = async (event: any) => {
         event.preventDefault();
         try{
-            const memory = await createMemory(newMemory);
-            if(image && memory.id){
-                await uploadImage(image, memory.id);
-            }
+            const memory = await createMemory(newMemory, image);
             openSnackBar('Memory Created!');
             if(memoryCreated){
                 memoryCreated(memory);

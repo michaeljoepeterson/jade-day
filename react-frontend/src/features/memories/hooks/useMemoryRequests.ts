@@ -4,10 +4,10 @@ import { AuthContext } from "../../../contexts/auth.context";
 import { apiUrl } from "../../../config";
 import { IMemory } from "../../../models/memories/memory";
 import { INewMemory } from "../../../models/memories/new-memory";
+import useImageUpload from "../../../firebase/hooks/useImageUpload";
 
 export interface IMemoryRequests{
-    createMemory: (memory: INewMemory) => Promise<IMemory>;
-    uploadImage: (file: File) => Promise<any>;
+    createMemory: (memory: INewMemory, image?: File | null) => Promise<IMemory>;
     getMemories: () => Promise<IMemory[]>;
 }
 
@@ -17,7 +17,8 @@ export interface IMemoryRequests{
 const useMemoryRequests = (): IMemoryRequests => {
     const memoryEndpoint = 'memory';
     const {getAuthHeaders, getUser} = useContext(AuthContext);
-    const createMemory = useCallback(async (memory: INewMemory) => {
+    const {uploadImage} = useImageUpload();
+    const createMemory = useCallback(async (memory: INewMemory, image?: File | null) => {
         try{
             const authHeaders = getAuthHeaders();
             const response = await axios.post(`${apiUrl}${memoryEndpoint}`, {
@@ -28,21 +29,10 @@ const useMemoryRequests = (): IMemoryRequests => {
                 ...data.memory,
                 date: new Date(data.memory.date)
             };
+            if(image && createdMemory.id){
+                await uploadImage(image, createdMemory.id);
+            }
             return createdMemory;
-        }
-        catch(e){
-            throw e;
-        }
-    }, [getAuthHeaders, getUser]);
-
-    const uploadImage = useCallback(async (image: File) => {
-        try{
-            const formData = new FormData();
-            formData.append('image', image, image.name);
-            const authHeaders = getAuthHeaders();
-            authHeaders.headers['Content-Type'] = 'multipart/form-data';
-            const response = await axios.post(`${apiUrl}${memoryEndpoint}/image/testid`, formData, authHeaders);
-            return response.data;
         }
         catch(e){
             throw e;
@@ -73,7 +63,6 @@ const useMemoryRequests = (): IMemoryRequests => {
 
     return {
         createMemory,
-        uploadImage,
         getMemories
     }
 }

@@ -5,4 +5,5 @@ export interface IBaseMemoryModalProps{
     subTitle?: string;
     memory?: IMemory | null;
     date?: Date;
+    imageUrl?: string | null;
 }

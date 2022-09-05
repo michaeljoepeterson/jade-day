@@ -42,6 +42,11 @@ const CreateMemoryPage = () => {
         geUserMemories();
     }, []);
 
+    const dialogChanged = useCallback((dialogType: MemoryDialogType) => {
+        console.log(dialogType)
+        setDisplayed(dialogType);
+    }, []);
+
     const dayClicked = useCallback(async (date: Date) => {
         const existingMemory = memories.find(memory => memory.date?.toDateString() === date.toDateString());
         const dialogType = existingMemory ? MemoryDialogType.view : MemoryDialogType.create;
@@ -74,6 +79,7 @@ const CreateMemoryPage = () => {
                 isOpen={dialogIsOpen}
                 dialogClosed={handleDialogClosed}
                 date={date}
+                dialogChanged={dialogChanged}
             />
         </div>
     )

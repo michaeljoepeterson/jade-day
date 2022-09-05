@@ -7,7 +7,7 @@ const ImageUpload = ({
     imageUrl
 }: {
     imageAdded: (file: File) => any;
-    imageUrl?: string;
+    imageUrl?: string | null;
 }) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [previewUrl, setPreviewUrl] = useState<string | undefined | null>(imageUrl);

@@ -1,4 +1,4 @@
-import { Button, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Button, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
 import { IBaseMemoryModalProps } from "../../../models/base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -8,22 +8,28 @@ import useMemoryRequests from "../../../hooks/useMemoryRequests";
 import ImageUpload from "../../image-upload/image-upload";
 import useImageUpload from "../../../../../firebase/hooks/useImageUpload";
 import { NotificationContext } from "../../../../../contexts/notification.context";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { MemoryDialogType } from "../memory-modal";
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',
     subTitle,
     date,
-    cancelClicked
+    cancelClicked,
+    cancelEditClicked,
+    memory,
+    imageUrl
 }:{
-    cancelClicked: () => void
+    cancelClicked: () => void;
+    cancelEditClicked: (dialogType: MemoryDialogType) => void;
 } & IBaseMemoryModalProps) => {
     const {createMemory} = useMemoryRequests();
     const {uploadImage} = useImageUpload();
     const {openSnackBar} = useContext(NotificationContext);
 
     const [newMemory, setNewMemory] = useState<INewMemory>({
-        summary: null,
-        description: null,
+        summary: memory ? memory.summary : '',
+        description: memory ? memory.description : '',
         date: date ? date : null
     });
 
@@ -84,6 +90,11 @@ const CreateMemoryModal = ({
                 <div className="flex flex-col">
                     <span className="font-bold text-2xl">
                         {title}
+                        <IconButton
+                        className="text-primary"
+                        onClick={(e) => cancelEditClicked(MemoryDialogType.view)}>
+                            <ArrowBackIcon/>
+                        </IconButton>
                     </span>
                     {subTitle && (
                         <span>
@@ -98,17 +109,22 @@ const CreateMemoryModal = ({
                         <TextField
                             variant="standard"
                             label="Title"
+                            value={newMemory.summary}
                             onChange={(e) => updateSummary(e.currentTarget?.value)}
                         />
                     </div>
                     <div className="mt-4">
                         <CKEditor
+                            data={newMemory.description}
                             editor={ClassicEditor}
                             onChange={(e: any, editor: any) => updateDescription(editor.getData())}
                         />
                     </div>
                     <div className="mt-4">
-                        <ImageUpload imageAdded={handleImageAdded}/>
+                        <ImageUpload
+                            imageUrl={imageUrl}
+                            imageAdded={handleImageAdded}
+                        />
                     </div>
                     <div className="mt-4 flex justify-between">
                         <Button 

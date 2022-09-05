@@ -1,4 +1,5 @@
 import { Dialog } from "@mui/material";
+import { useCallback } from "react";
 import { IMemory } from "../../../../models/memories/memory";
 import { IBaseMemoryModalProps } from "../../models/base-memory-props";
 import CreateMemoryModal from "./modals/create-memory-modal";
@@ -15,12 +16,14 @@ const MemoryModal = ({
     memory,
     displayedDialog = MemoryDialogType.create,
     date,
-    isOpen
+    isOpen,
+    dialogChanged
 }: IBaseMemoryModalProps & {
     dialogClosed: () => void;
     image?: string | null;
     displayedDialog?: MemoryDialogType;
     isOpen: boolean;
+    dialogChanged: (dialogType: MemoryDialogType) => void;
 }) => {
     let dialogContent = null;
 
@@ -33,6 +36,10 @@ const MemoryModal = ({
         }
     }
 
+    const changeModalClicked = useCallback((modalType: MemoryDialogType) => {
+        dialogChanged(modalType);
+    }, []);
+
     if(!date){
         return null;
     }
@@ -41,17 +48,21 @@ const MemoryModal = ({
         case MemoryDialogType.view:
             dialogContent = (
                 <ViewMemoryModal
-                    image={image}
+                    imageUrl={image}
                     memory={memory as IMemory}
+                    editClicked={(dialogType) => changeModalClicked(dialogType)}
                 />
             );
             break;
         case MemoryDialogType.create:
             dialogContent = (
                 <CreateMemoryModal 
+                    memory={memory}
                     subTitle={date.toDateString()}
                     date={date}
                     cancelClicked={handleclose}
+                    cancelEditClicked={(dialogType) => changeModalClicked(dialogType)}
+                    imageUrl={image}
                 />
             );
             break;

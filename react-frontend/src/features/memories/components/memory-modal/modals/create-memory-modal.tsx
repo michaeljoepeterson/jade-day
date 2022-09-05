@@ -10,6 +10,7 @@ import useImageUpload from "../../../../../firebase/hooks/useImageUpload";
 import { NotificationContext } from "../../../../../contexts/notification.context";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { MemoryDialogType } from "../memory-modal";
+import { IMemory } from "../../../../../models/memories/memory";
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',
@@ -18,10 +19,12 @@ const CreateMemoryModal = ({
     cancelClicked,
     cancelEditClicked,
     memory,
-    imageUrl
+    imageUrl,
+    memoryCreated
 }:{
     cancelClicked: () => void;
     cancelEditClicked: (dialogType: MemoryDialogType) => void;
+    memoryCreated?: (memory: IMemory) => void; 
 } & IBaseMemoryModalProps) => {
     const {createMemory} = useMemoryRequests();
     const {uploadImage} = useImageUpload();
@@ -55,13 +58,15 @@ const CreateMemoryModal = ({
 
     const saveMemory = async (event: any) => {
         event.preventDefault();
-        console.log('new memory', newMemory);
         try{
             const memory = await createMemory(newMemory);
             if(image && memory.id){
                 await uploadImage(image, memory.id);
             }
             openSnackBar('Memory Created!');
+            if(memoryCreated){
+                memoryCreated(memory);
+            }
             cancelClicked();
         }
         catch(e){
@@ -90,11 +95,14 @@ const CreateMemoryModal = ({
                 <div className="flex flex-col">
                     <span className="font-bold text-2xl">
                         {title}
-                        <IconButton
-                        className="text-primary"
-                        onClick={(e) => cancelEditClicked(MemoryDialogType.view)}>
-                            <ArrowBackIcon/>
-                        </IconButton>
+                        {
+                            memory && 
+                            <IconButton
+                            className="text-primary"
+                            onClick={(e) => cancelEditClicked(MemoryDialogType.view)}>
+                                <ArrowBackIcon/>
+                            </IconButton>
+                        }
                     </span>
                     {subTitle && (
                         <span>

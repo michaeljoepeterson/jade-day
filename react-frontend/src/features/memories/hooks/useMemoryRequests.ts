@@ -24,7 +24,11 @@ const useMemoryRequests = (): IMemoryRequests => {
                 memory
             }, authHeaders);
             const data = response.data;
-            return data.memory;
+            const createdMemory: IMemory = {
+                ...data.memory,
+                date: new Date(data.memory.date)
+            };
+            return createdMemory;
         }
         catch(e){
             throw e;

@@ -63,6 +63,12 @@ const CreateMemoryPage = () => {
         setImage(image);
     }, [memories]);
 
+    const memoryCreated = useCallback((memory: IMemory) => {
+        const newMemories = [...memories];
+        newMemories.push(memory);
+        setMemories(newMemories);
+    }, [memories]);
+
     return(
         <div>
             <h4 onClick={(e) => updateDate()}>Create a Memory</h4>
@@ -80,6 +86,7 @@ const CreateMemoryPage = () => {
                 dialogClosed={handleDialogClosed}
                 date={date}
                 dialogChanged={dialogChanged}
+                memoryCreated={memoryCreated}
             />
         </div>
     )

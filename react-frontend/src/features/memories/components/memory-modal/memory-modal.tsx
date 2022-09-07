@@ -18,7 +18,8 @@ const MemoryModal = ({
     date,
     isOpen,
     dialogChanged,
-    memoryCreated
+    memoryCreated,
+    memoryUpdated
 }: IBaseMemoryModalProps & {
     dialogClosed: () => void;
     image?: string | null;
@@ -26,6 +27,7 @@ const MemoryModal = ({
     isOpen: boolean;
     dialogChanged: (dialogType: MemoryDialogType) => void;
     memoryCreated: (memory: IMemory) => void;
+    memoryUpdated: (memory: IMemory) => void; 
 }) => {
     let dialogContent = null;
 
@@ -66,6 +68,7 @@ const MemoryModal = ({
                     cancelEditClicked={(dialogType) => changeModalClicked(dialogType)}
                     imageUrl={image}
                     memoryCreated={(memory) => memoryCreated(memory)}
+                    memoryUpdated={(memory) => memoryUpdated(memory)}
                 />
             );
             break;

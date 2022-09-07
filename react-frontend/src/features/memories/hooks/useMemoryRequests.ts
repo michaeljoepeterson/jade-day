@@ -9,6 +9,7 @@ import useImageUpload from "../../../firebase/hooks/useImageUpload";
 export interface IMemoryRequests{
     createMemory: (memory: INewMemory, image?: File | null) => Promise<IMemory>;
     getMemories: () => Promise<IMemory[]>;
+    updateMemory: (memory: IMemory, image?: File | null) => Promise<IMemory>;
 }
 
 /**
@@ -61,9 +62,31 @@ const useMemoryRequests = (): IMemoryRequests => {
         }
     }, [getAuthHeaders, getUser]);
 
+    const updateMemory = useCallback(async (memory: IMemory, image?: File | null) => {
+        try{
+            const authHeaders = getAuthHeaders();
+            const response = await axios.put(`${apiUrl}${memoryEndpoint}/${memory.id}`, {
+                memory
+            }, authHeaders);
+            const data = response.data;
+            const createdMemory: IMemory = {
+                ...data.memory,
+                date: new Date(data.memory.date)
+            };
+            if(image && createdMemory.id){
+                await uploadImage(image, createdMemory.id);
+            }
+            return createdMemory;
+        }
+        catch(e){
+            throw e;
+        }
+    }, [getAuthHeaders, getUser]);
+
     return {
         createMemory,
-        getMemories
+        getMemories,
+        updateMemory
     }
 }
 

@@ -20,13 +20,15 @@ const CreateMemoryModal = ({
     cancelEditClicked,
     memory,
     imageUrl,
-    memoryCreated
+    memoryCreated,
+    memoryUpdated
 }:{
     cancelClicked: () => void;
     cancelEditClicked: (dialogType: MemoryDialogType) => void;
-    memoryCreated?: (memory: IMemory) => void; 
+    memoryCreated: (memory: IMemory) => void;
+    memoryUpdated: (memory: IMemory) => void; 
 } & IBaseMemoryModalProps) => {
-    const {createMemory} = useMemoryRequests();
+    const {createMemory, updateMemory} = useMemoryRequests();
     const {openSnackBar} = useContext(NotificationContext);
 
     const [newMemory, setNewMemory] = useState<INewMemory>({
@@ -58,10 +60,27 @@ const CreateMemoryModal = ({
     const saveMemory = async (event: any) => {
         event.preventDefault();
         try{
-            const memory = await createMemory(newMemory, image);
-            openSnackBar('Memory Created!');
-            if(memoryCreated){
-                memoryCreated(memory);
+            let savedMemory;
+            let memoryMessage;
+            if(memory){
+                savedMemory = await updateMemory({
+                    ...memory,
+                    description: newMemory.description,
+                    summary: newMemory.summary
+                }, image);
+                memoryMessage = 'Memory Updated!';
+            }
+            else{
+                savedMemory = await createMemory(newMemory, image);
+                memoryMessage = 'Memory Created!';
+            }
+
+            openSnackBar(memoryMessage);
+            if(!memory){
+                memoryCreated(savedMemory);
+            }
+            else{
+                memoryUpdated(savedMemory);
             }
             cancelClicked();
         }

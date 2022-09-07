@@ -39,7 +39,7 @@ class BaseDb{
         try{
             let data = {...doc};
             let newDoc = await this.db.collection(this.collectionName).doc(id).update(data);
-            let docData = await newDoc.get();
+            let docData = await this.db.collection(this.collectionName).doc(id).get();
             return this.docDataToModel(docData);
         }
         catch(e){

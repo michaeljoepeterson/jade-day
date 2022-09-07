@@ -69,6 +69,13 @@ const CreateMemoryPage = () => {
         setMemories(newMemories);
     }, [memories]);
 
+    const memoryUpdated = useCallback((memory: IMemory) => {
+        const newMemories = [...memories];
+        const foundMemoryIndex = newMemories.findIndex(currentMemory => currentMemory.id === memory.id);
+        newMemories[foundMemoryIndex] = memory;
+        setMemories(newMemories);
+    }, [memories]);
+
     return(
         <div>
             <h4 onClick={(e) => updateDate()}>Create a Memory</h4>
@@ -87,6 +94,7 @@ const CreateMemoryPage = () => {
                 date={date}
                 dialogChanged={dialogChanged}
                 memoryCreated={memoryCreated}
+                memoryUpdated={memoryUpdated}
             />
         </div>
     )

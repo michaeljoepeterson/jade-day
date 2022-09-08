@@ -69,6 +69,7 @@ const MemoryCalendar = ({
             <div>
                 <CalendarControls
                     onDateChange={(date) => dateChanged(date)}
+                    memories={memories}
                 />
             </div>
             <FullCalendar

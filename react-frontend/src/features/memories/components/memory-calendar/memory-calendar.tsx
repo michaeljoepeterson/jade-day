@@ -3,6 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
 import React, { useCallback, useEffect, useMemo } from "react";
 import { IMemory } from "../../../../models/memories/memory";
+import CalendarControls from "./calendar-controls";
 
 const MemoryCalendar = ({
     height = '45em',
@@ -55,6 +56,9 @@ const MemoryCalendar = ({
 
     return(
         <div className="h-full">
+            <div>
+                <CalendarControls/>
+            </div>
             <FullCalendar
                 ref={calendar}
                 height={height}

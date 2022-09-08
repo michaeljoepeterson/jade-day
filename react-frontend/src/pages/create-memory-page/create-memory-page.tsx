@@ -1,11 +1,11 @@
 import { useCallback, useState, useEffect, useContext } from "react"
-import MemoryCalendar from "../features/memories/components/memory-calendar/memory-calendar"
-import withLoggedIn from "../HOC/withLoggedIn"
-import { IMemory } from "../models/memories/memory";
-import useMemoryRequests from "../features/memories/hooks/useMemoryRequests";
-import { NotificationContext } from "../contexts/notification.context";
-import useImageUpload from "../firebase/hooks/useImageUpload";
-import MemoryModal, { MemoryDialogType } from "../features/memories/components/memory-modal/memory-modal";
+import MemoryCalendar from "../../features/memories/components/memory-calendar/memory-calendar"
+import withLoggedIn from "../../HOC/withLoggedIn"
+import { IMemory } from "../../models/memories/memory";
+import useMemoryRequests from "../../features/memories/hooks/useMemoryRequests";
+import { NotificationContext } from "../../contexts/notification.context";
+import useImageUpload from "../../firebase/hooks/useImageUpload";
+import MemoryModal, { MemoryDialogType } from "./components/memory-modal/memory-modal";
 
 const CreateMemoryPage = () => {
     const [date, setDate] = useState<Date>(new Date());
@@ -50,8 +50,6 @@ const CreateMemoryPage = () => {
     const dayClicked = useCallback(async (date: Date) => {
         const existingMemory = memories.find(memory => memory.date?.toDateString() === date.toDateString());
         const dialogType = existingMemory ? MemoryDialogType.view : MemoryDialogType.create;
-        console.log(date);
-        console.log(existingMemory, memories);
         let image = null;
         if(existingMemory){
             image = await getImage(existingMemory.id);
@@ -78,7 +76,7 @@ const CreateMemoryPage = () => {
 
     return(
         <div>
-            <h4 onClick={(e) => updateDate()}>Create a Memory</h4>
+            <h2 className="text-3xl mb-5" onClick={(e) => updateDate()}>Create a Memory</h2>
             <MemoryCalendar
                 eventClicked={dayClicked}
                 dayClicked={dayClicked}

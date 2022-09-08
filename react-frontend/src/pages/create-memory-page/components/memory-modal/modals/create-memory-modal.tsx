@@ -1,16 +1,15 @@
 import { Button, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
-import { IBaseMemoryModalProps } from "../../../models/base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { INewMemory } from "../../../../../models/memories/new-memory";
 import { useContext, useState } from "react";
-import useMemoryRequests from "../../../hooks/useMemoryRequests";
 import ImageUpload from "../../image-upload/image-upload";
-import useImageUpload from "../../../../../firebase/hooks/useImageUpload";
 import { NotificationContext } from "../../../../../contexts/notification.context";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { MemoryDialogType } from "../memory-modal";
 import { IMemory } from "../../../../../models/memories/memory";
+import useMemoryRequests from "../../../../../features/memories/hooks/useMemoryRequests";
+import { IBaseMemoryModalProps } from "../../../../../features/memories/models/base-memory-props";
 
 const CreateMemoryModal = ({
     title = 'Create a New Memory',

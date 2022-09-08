@@ -1,7 +1,7 @@
 import { Dialog } from "@mui/material";
 import { useCallback } from "react";
+import { IBaseMemoryModalProps } from "../../../../features/memories/models/base-memory-props";
 import { IMemory } from "../../../../models/memories/memory";
-import { IBaseMemoryModalProps } from "../../models/base-memory-props";
 import CreateMemoryModal from "./modals/create-memory-modal";
 import ViewMemoryModal from "./modals/view-memory-modal";
 

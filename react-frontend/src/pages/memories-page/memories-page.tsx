@@ -1,4 +1,4 @@
-import withLoggedIn from "../HOC/withLoggedIn";
+import withLoggedIn from "../../HOC/withLoggedIn";
 
 const MemoriesPage = () => {
     return (

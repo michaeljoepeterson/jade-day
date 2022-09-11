@@ -4,12 +4,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Suspense } from 'react';
 import Navbar from './components/navbar';
 import { AuthProvider } from './contexts/auth.context';
-import MemoriesPage from './pages/memories-page';
-import CreateMemoryPage from './pages/create-memory-page/create-memory-page';
 import MainLayout from './components/main-layout';
 import { NotificationProvider } from './contexts/notification.context';
-const HomePage = React.lazy(() => import('./pages/home-page'));
+const HomePage = React.lazy(() => import('./pages/home-page/home-page'));
 const NotFoundPage = React.lazy(() => import('./pages/not-found'));
+const CreateMemoryPage = React.lazy(() => import('./pages/create-memory-page/create-memory-page'));
+const MemoriesPage = React.lazy(() => import('./pages/memories-page/memories-page'));
 
 
 function App() {

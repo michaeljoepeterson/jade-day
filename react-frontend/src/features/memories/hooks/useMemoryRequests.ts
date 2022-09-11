@@ -5,6 +5,7 @@ import { apiUrl } from "../../../config";
 import { IMemory } from "../../../models/memories/memory";
 import { INewMemory } from "../../../models/memories/new-memory";
 import useImageUpload from "../../../firebase/hooks/useImageUpload";
+import memoryApi from "../models/memory-api";
 
 export interface IMemoryRequests{
     createMemory: (memory: INewMemory, image?: File | null) => Promise<IMemory>;
@@ -22,14 +23,7 @@ const useMemoryRequests = (): IMemoryRequests => {
     const createMemory = useCallback(async (memory: INewMemory, image?: File | null) => {
         try{
             const authHeaders = getAuthHeaders();
-            const response = await axios.post(`${apiUrl}${memoryEndpoint}`, {
-                memory
-            }, authHeaders);
-            const data = response.data;
-            const createdMemory: IMemory = {
-                ...data.memory,
-                date: new Date(data.memory.date)
-            };
+            const createdMemory: IMemory = await memoryApi.createMemory(memory, authHeaders);
             if(image && createdMemory.id){
                 await uploadImage(image, createdMemory.id);
             }
@@ -42,19 +36,12 @@ const useMemoryRequests = (): IMemoryRequests => {
 
     const getMemories = useCallback(async () => {
         try{
-            let userMemories: IMemory[] = [];
-            const authHeaders = getAuthHeaders();
             const user = getUser();
             if(!user){
-                return userMemories;
+                return [];
             }
-            const response = await axios.get(`${apiUrl}${memoryEndpoint}/${user.email}`, authHeaders);
-            const data = response.data;
-            const {memories} = data;
-            memories.forEach((memory: IMemory) => userMemories.push({
-                ...memory,
-                date: memory.date ? new Date(memory.date) : new Date()
-            }));
+            const authHeaders = getAuthHeaders();
+            let userMemories: IMemory[] = await memoryApi.getMemories(authHeaders, user.email as string);
             return userMemories;
         }
         catch(e){
@@ -65,14 +52,7 @@ const useMemoryRequests = (): IMemoryRequests => {
     const updateMemory = useCallback(async (memory: IMemory, image?: File | null) => {
         try{
             const authHeaders = getAuthHeaders();
-            const response = await axios.put(`${apiUrl}${memoryEndpoint}/${memory.id}`, {
-                memory
-            }, authHeaders);
-            const data = response.data;
-            const createdMemory: IMemory = {
-                ...data.memory,
-                date: new Date(data.memory.date)
-            };
+            const createdMemory: IMemory = await memoryApi.updateMemory(memory, authHeaders);
             if(image && createdMemory.id){
                 await uploadImage(image, createdMemory.id);
             }

@@ -1,10 +1,10 @@
 import { DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
-import { IBaseMemoryModalProps } from "../../../models/base-memory-props";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import MemoryImage from "../../memory-image/memory-image";
 import EditIcon from '@mui/icons-material/Edit';
 import { MemoryDialogType } from "../memory-modal";
+import { IBaseMemoryModalProps } from "../../../../../features/memories/models/base-memory-props";
 
 const ViewMemoryModal = ({
     memory,

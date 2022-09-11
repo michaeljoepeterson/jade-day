@@ -1,12 +1,13 @@
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' 
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { IMemory } from "../../../../models/memories/memory";
+import CalendarControls from "./calendar-controls";
 
 const MemoryCalendar = ({
     height = '45em',
-    startDate = new Date(),
+    startDate,
     dayClicked,
     memories = [],
     eventClicked
@@ -22,16 +23,22 @@ const MemoryCalendar = ({
         title: memory.summary,
         date:  memory.date
     })), [memories]);
+    const [currentDate, setCurrentDate] = useState<Date>(startDate ? startDate : new Date());
+
+    useEffect(() => {
+        setCurrentDate(startDate ? startDate : new Date());
+    }, [startDate]);
 
     useEffect(() => {
         try{
             const api = calendar?.current?.getApi();
-            api?.gotoDate(startDate);
+            api?.gotoDate(currentDate);
+            console.log(api);
         }
         catch(e){
             console.warn(e);
         }
-    }, [startDate]);
+    }, [currentDate]);
 
     const handleDateClicked = useCallback((event: DateClickArg) => {
         try{
@@ -53,8 +60,18 @@ const MemoryCalendar = ({
         }
     }, [memories, startDate]);
 
+    const dateChanged = (date: Date) => {
+        setCurrentDate(date);
+    };
+
     return(
         <div className="h-full">
+            <div>
+                <CalendarControls
+                    onDateChange={(date) => dateChanged(date)}
+                    memories={memories}
+                />
+            </div>
             <FullCalendar
                 ref={calendar}
                 height={height}
@@ -63,7 +80,7 @@ const MemoryCalendar = ({
                 initialDate={startDate}
                 dateClick={handleDateClicked}
                 //todo add custom controls
-                headerToolbar={undefined}
+                headerToolbar={false}
                 events={memoryEvents}
                 displayEventTime={false}
                 eventClick={handleEventClicked}

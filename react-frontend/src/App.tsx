@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import Navbar from './components/navbar';
 import { AuthProvider } from './contexts/auth.context';
 import MemoriesPage from './pages/memories-page';
-import CreateMemoryPage from './pages/create-memory-page';
+import CreateMemoryPage from './pages/create-memory-page/create-memory-page';
 import MainLayout from './components/main-layout';
 import { NotificationProvider } from './contexts/notification.context';
 const HomePage = React.lazy(() => import('./pages/home-page'));

@@ -1,12 +1,14 @@
 const express = require('express');
 const { memoryDb } = require('../db/memory-db');
 const { Memory } = require('../models/memory');
-const { checkAuth } = require('../middleware/checkAuth');
 const { checkRole } = require('../middleware/checkRole');
 const { imageStorage } = require('../storage/storage');
+const { checkToken } = require('../middleware/checkToken');
+const { checkUser } = require('../middleware/checkUser');
 const router = express.Router();
 
-router.use(checkAuth);
+router.use(checkToken);
+router.use(checkUser);
 
 router.post('/', checkRole(0), async (req, res, next) => {
     const {memory} = req.body;

@@ -72,7 +72,7 @@ export const AuthProvider = ({
                 return;
             }
             const authToken = await user?.getIdToken();
-            const appUser = await checkAppUser(user.email as string);
+            const appUser = await checkAppUser(user.email as string, authToken);
             setAuthState({
                 ...authState,
                 loading: false,
@@ -123,14 +123,18 @@ export const AuthProvider = ({
         return authState?.user?.email && authState?.authToken ? true : false
     }, [authState]);
 
+    const buildAuthHeaders = (authToken: string) => {
+        return {
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        }
+    }
+
     const getAuthHeaders = useCallback(() => {
         const {authToken} = authState;
         if(authToken){
-            return {
-                headers:{
-                    Authorization: `Bearer ${authToken}`
-                }
-            }
+            return buildAuthHeaders(authToken);
         }
         return {};
     }, [authState])
@@ -144,14 +148,15 @@ export const AuthProvider = ({
      * @param email
      * @returns
      */
-    const checkAppUser = async (email: string) => {
+    const checkAppUser = async (email: string, authToken: string) => {
         try{
             const url = `${apiUrl}users/check`;
+            const authHeaders = buildAuthHeaders(authToken)
             const res = await axios.post(url, {
                 user:{
                     email
                 }
-            });
+            }, authHeaders);
             return res.data?.user;
         }
         catch(e){

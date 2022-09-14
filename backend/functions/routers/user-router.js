@@ -1,8 +1,9 @@
 const express = require('express');
 const { userDb } = require('../db/user-db');
+const { checkToken } = require('../middleware/checkToken');
 const router = express.Router();
 
-router.post('/check',async (req, res, next) => {
+router.post('/check', checkToken, async (req, res, next) => {
     let {user} = req.body;
     try{
         let appUser = await userDb.checkUser(user);

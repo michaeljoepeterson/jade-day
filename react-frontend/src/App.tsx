@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Suspense } from 'react';
-import Navbar from './components/navbar';
+import Navbar from './components/navbar/navbar';
 import { AuthProvider } from './contexts/auth.context';
 import MainLayout from './components/main-layout';
 import { NotificationProvider } from './contexts/notification.context';

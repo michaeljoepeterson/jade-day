@@ -2,23 +2,29 @@ import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Divider, List, Li
 import { useCallback, useContext, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
-import AuthModal from './auth/auth-modal';
-import { AuthContext } from '../contexts/auth.context';
+import AuthModal from '../auth/auth-modal';
+import { AuthContext } from '../../contexts/auth.context';
+import { INavbarConfig, NavbarConfig } from './navbar-config';
+import NavLinks from './nav-links';
 
 /**
  * simple mobile responsive placeholder navbar mainly for demo purposes
  * @returns
  */
-const Navbar = () => {
+const Navbar = ({
+    config = NavbarConfig
+}: {
+    config?: INavbarConfig[]
+}) => {
     const {
         loginWithEmail, 
         createUserWithEmail, 
         loginWithGoogle,
         logout,
-        authState
+        authState,
+        isLoggedIn
     } = useContext(AuthContext);
-    const {user, loading} = authState;
-    const isLoggedIn = user?.email ? true : false;
+    const {loading, user} = authState;
     const isLoading = loading;
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -68,25 +74,29 @@ const Navbar = () => {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">
-            Jade Day
-          </Typography>
-          <Divider />
-          <List>
-                <ListItem disablePadding>
-                    <ListItemButton style={{justifyContent: 'center'}}>
-                        <Link className="nav-link-mobile-button" to="/">
-                            <ListItemText primary={'Home'}/>
-                        </Link>
-                    </ListItemButton>
-                </ListItem>
-          </List>
+            <h6 className="text-lg font-bold p-1">
+                Jade Day
+            </h6>
+            <Divider />
+            <div className="flex flex-col">
+                <Link
+                    className="p-2"
+                    to="/"
+                >
+                    Home
+                </Link>
+                <NavLinks
+                    config={config}
+                    user={user}
+                    userIsLogged={isLoggedIn()}
+                />
+            </div>
         </Box>
     );
     
     const drawerWidth = 240;
     const container = window !== undefined ? () => window.document.body : undefined;
-    const loginButton = !isLoggedIn ? 
+    const loginButton = !isLoggedIn() ? 
     (<Button
     variant="contained" 
     color="secondary"
@@ -102,28 +112,36 @@ const Navbar = () => {
     return (
         <AppBar component="nav">
             <Toolbar>
-            <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: 'none' } }}
-            >
-                <MenuIcon />
-            </IconButton>
-            <Typography
-                variant="h6"
-                component="div"
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-            >
-                Jade Day
-            </Typography>
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                {isLoading ? null : loginButton}
-            </Box>
+                <IconButton
+                    className="inline-block sm:hidden"
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    sx={{ mr: 2 }}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <div className="hidden flex-1 sm:block">
+                    <Link
+                        className="font-bold p-2"
+                        to="/"
+                    >
+                        Jade Day
+                    </Link>
+                    <NavLinks
+                        config={config}
+                        user={user}
+                        userIsLogged={isLoggedIn()}
+                    />
+                </div>
+                <Box className="hidden sm:block">
+                    {isLoading ? null : loginButton}
+                </Box>
             </Toolbar>
             <Box component="nav">
                 <Drawer
+                className='block sm:hidden'
                 container={container}
                 variant="temporary"
                 open={mobileOpen}
@@ -132,7 +150,6 @@ const Navbar = () => {
                     keepMounted: true
                 }}
                 sx={{
-                    display: { xs: 'block', sm: 'none' },
                     '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                 }}
                 >
